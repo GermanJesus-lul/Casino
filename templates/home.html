@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/menubar.css') }}">
+</head>
+<body style="margin: 0; padding: 0;">
+  <div id="menubar">
+
+    <div id="menubar_left">
+        <div class="menubar_icon_div">
+          <img class="menubar_icon" src="{{ url_for('static', filename='images/nav.png') }}"/>
+        </div>
+        <div class="menubar_icon_div">
+          <img class="menubar_icon" src="{{ url_for('static', filename='images/home.png') }}"/>
+        </div>
+    </div>
+
+    <div id="menubar_right">
+            <div class="menubar_username_div">
+                <a href="/login">Username</a>
+            </div>
+            <div class="menubar_username_div">
+                <p>Balance</p>
+            </div>
+    </div>
+
+  </div>
+</body>
+</html>
