@@ -3,6 +3,14 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 
+def valid_login(username, password):
+    return True
+
+
+def register_user(username, password):
+    pass
+
+
 @app.route("/")
 def hello_world():
     return render_template("home.html")
@@ -11,7 +19,11 @@ def hello_world():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        return "<h1>Hello World!</h1>"
+        username = request.form["username"]
+        password = request.form["password"]
+        if valid_login(username, password):
+            return "success"
+        return "failed"
     elif request.method == "GET":
         return render_template("login.html")
 
