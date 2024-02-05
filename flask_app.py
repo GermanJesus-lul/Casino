@@ -50,7 +50,7 @@ def register_user(username, password):
 
 
 def create_token(username):
-    token = secrets.token_urlsafe(2)
+    token = secrets.token_urlsafe(64)
     with MySQL("INSERT") as curs:
         curs.execute('INSERT INTO sessions (token, user_id) VALUES (%s, ('
                     'SELECT id FROM users WHERE username=%s))',
