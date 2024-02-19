@@ -121,8 +121,8 @@ def account():
     if request.method == "GET":
         token = request.cookies.get('token')
         if not token:
-            return 'cookie not set'
+            return redirect('/login')
         user_id = userid_from_token(token)
         if not user_id:
-            return 'invalid token'
+            return redirect('/login')
         return 'success ' + str(user_id)
