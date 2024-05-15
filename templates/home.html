@@ -20,11 +20,17 @@
 
     <div id="menubar_right">
             <div class="menubar_username_div">
-                <a href="/login">Login</a>
+                {% if username is defined %}
+                    <a href="/account">{{ username }}</a>
+                {% else %}
+                    <a href="/login">Login</a>
+                {% endif %}
             </div>
-            <div class="menubar_username_div">
-                <p>Balance</p>
-            </div>
+            {% if balance is defined %}
+                <div class="menubar_username_div">
+                    <p>{{ balance }}</p>
+                </div>
+            {% endif %}
     </div>
 
   </div>

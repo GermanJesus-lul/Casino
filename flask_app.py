@@ -67,6 +67,23 @@ def userid_from_token(token):
     else:
         return None
 
+def username_from_id(user_id):
+    with MySQL("SELECT") as curs:
+        curs.execute("SELECT username FROM sessions WHERE user_id=%s;", (str(user_id), ))
+        x = curs.fetchall()
+    if x is not None:
+        return x[0][0]
+    else:
+        return None
+
+def balance_from_id(user_id):
+    with MySQL("SELECT") as curs:
+        curs.execute("SELECT balance FROM sessions WHERE user_id=%s;", (str(user_id),))
+        x = curs.fetchall()
+    if x is not None:
+        return x[0][0]
+    else:
+        return None
 
 @app.before_request
 def before_request():
@@ -78,6 +95,15 @@ def before_request():
 
 @app.route("/")
 def home():
+    if request.method == "GET":
+        token = request.cookies.get('token')
+        if not token:
+            return redirect('/login')
+        user_id = userid_from_token(token)
+        if not user_id:
+            return redirect('/login')
+        # return home page with info
+        return render_template("home.html", username=username_from_id(user_id), balance=balance_from_id(user_id))
     return render_template("home.html")
 
 
@@ -125,4 +151,5 @@ def account():
         user_id = userid_from_token(token)
         if not user_id:
             return redirect('/login')
+        # return account page (information, security etc.)
         return 'success ' + str(user_id)
