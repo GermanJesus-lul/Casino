@@ -69,7 +69,7 @@ def userid_from_token(token):
 
 def username_from_id(user_id):
     with MySQL("SELECT") as curs:
-        curs.execute("SELECT username FROM sessions WHERE user_id=%s;", (str(user_id), ))
+        curs.execute("SELECT username FROM users WHERE user_id=%s;", (str(user_id), ))
         x = curs.fetchall()
     if x is not None:
         return x[0][0]
@@ -78,7 +78,7 @@ def username_from_id(user_id):
 
 def balance_from_id(user_id):
     with MySQL("SELECT") as curs:
-        curs.execute("SELECT balance FROM sessions WHERE user_id=%s;", (str(user_id),))
+        curs.execute("SELECT balance FROM users WHERE user_id=%s;", (str(user_id),))
         x = curs.fetchall()
     if x is not None:
         return x[0][0]
@@ -91,7 +91,6 @@ def before_request():
         url = request.url.replace('http://', 'https://', 1)
         code = 301
         return redirect(url, code=code)
-
 
 @app.route("/")
 def home():
