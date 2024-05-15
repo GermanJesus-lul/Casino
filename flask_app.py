@@ -1,96 +1,16 @@
 from flask import Flask, render_template, request, make_response, redirect
-from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError
-import secrets
-import mysql.connector
+
+from Casino.user_administration import *
 
 app = Flask(__name__)
-ph = PasswordHasher()
 
-
-class MySQL:
-    def __init__(self, sql_type):
-        self.sql_type = sql_type
-
-    def __enter__(self):
-        self.con = mysql.connector.connect(user='Betonblock', password='somepasswordformysql',
-                                  host='Betonblock.mysql.pythonanywhere-services.com',
-                                  database='Betonblock$casino')
-        self.cur = self.con.cursor(buffered=True)
-        return self.cur
-
-    def __exit__(self, *args):
-        if self.sql_type == "INSERT":
-            self.con.commit()
-        self.cur.close()
-        self.con.close()
-
-
-def valid_login(username, password):
-    with MySQL("SELECT") as curs:
-        curs.execute('SELECT password FROM users WHERE username=%s', (username,))
-        phash = curs.fetchone()[0]
-    try:
-        return ph.verify(phash, password)
-    except VerifyMismatchError:
-        return False
-
-
-def user_exists(username):
-    with MySQL("SELECT") as curs:
-        curs.execute('SELECT 1 FROM users WHERE username=%s', (username,))
-        return bool(len(curs.fetchall()))
-
-
-def register_user(username, password):
-    phash = ph.hash(password)
-    with MySQL("INSERT") as curs:
-        curs.execute('INSERT INTO users (username, password, balance) VALUES (%s, %s, %s)',
-                    (username, phash, 0))
-
-
-def create_token(username):
-    token = secrets.token_urlsafe(64)
-    with MySQL("INSERT") as curs:
-        curs.execute('INSERT INTO sessions (token, user_id) VALUES (%s, ('
-                    'SELECT id FROM users WHERE username=%s))',
-                    (token, username))
-    return token
-
-
-def userid_from_token(token):
-    with MySQL("SELECT") as curs:
-        curs.execute("SELECT user_id, created_at FROM sessions WHERE token=%s;", (str(token), ))
-        x = curs.fetchall()
-    if x is not None:
-        return x[0][0]
-    else:
-        return None
-
-def username_from_id(user_id):
-    with MySQL("SELECT") as curs:
-        curs.execute("SELECT username FROM users WHERE id=%s;", (str(user_id), ))
-        x = curs.fetchall()
-    if x is not None:
-        return x[0][0]
-    else:
-        return None
-
-def balance_from_id(user_id):
-    with MySQL("SELECT") as curs:
-        curs.execute("SELECT balance FROM users WHERE id=%s;", (str(user_id),))
-        x = curs.fetchall()
-    if x is not None:
-        return x[0][0]
-    else:
-        return None
 
 @app.before_request
 def before_request():
     if not request.is_secure:
         url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
+        return redirect(url, code=301)
+
 
 @app.route("/")
 def home():
@@ -102,7 +22,9 @@ def home():
         if not user_id:
             return redirect('/login')
         # return home page with info
-        return render_template("home.html", username=username_from_id(user_id), balance=balance_from_id(user_id))
+        return render_template("home.html",
+                               username=userdata_from_id(user_id)['username'],
+                               balance=userdata_from_id(user_id)['balance'])
     return render_template("home.html")
 
 
