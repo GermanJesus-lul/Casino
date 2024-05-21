@@ -7,32 +7,7 @@
 </head>
 <body style="margin: 0; padding: 0;">
 
-  <div id="menubar">
+{% include 'menubar.html' %}
 
-    <div id="menubar_left">
-        <div class="menubar_icon_div">
-          <img class="menubar_icon" src="/static/images/nav.png"/>
-        </div>
-        <div class="menubar_icon_div">
-          <img class="menubar_icon" src="/static/images/home.png"/>
-        </div>
-    </div>
-
-    <div id="menubar_right">
-            <div class="menubar_username_div">
-                {% if username is defined %}
-                    <a href="/account">{{ username }}</a>
-                {% else %}
-                    <a href="/login">Login</a>
-                {% endif %}
-            </div>
-            {% if balance is defined %}
-                <div class="menubar_username_div">
-                    <p>{{ balance }}</p>
-                </div>
-            {% endif %}
-    </div>
-
-  </div>
 </body>
 </html>
