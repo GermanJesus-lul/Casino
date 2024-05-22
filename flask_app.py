@@ -1,12 +1,12 @@
 from flask import Flask, request, redirect
 
 from blueprints.autodeployment import autodeployment
-from blueprints.home import home
+from blueprints.home import home_blueprint
 from blueprints.user_administration import user_administration
 
 app = Flask(__name__)
 app.register_blueprint(autodeployment)
-app.register_blueprint(home)
+app.register_blueprint(home_blueprint)
 app.register_blueprint(user_administration)
 
 

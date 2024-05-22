@@ -1,10 +1,10 @@
 from flask import request, redirect, render_template, Blueprint
 from Casino.helper_functions.user_administration import userid_from_token, userdata_from_id
 
-home = Blueprint('home', __name__)
+home_blueprint = Blueprint('home', __name__)
 
 
-@home.route("/")
+@home_blueprint.route("/")
 def home():
     if request.method == "GET":
         token = request.cookies.get('token')
