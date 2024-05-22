@@ -63,11 +63,11 @@ def userdata_from_id(user_id):
 
 def add_balance(user_id, amount):
     with MySQL("UPDATE") as curs:
-        curs.execute('UPDATE users SET balance = balance + 10 WHERE id=%s',
-                     (user_id,))
+        curs.execute('UPDATE users SET balance = balance + %s WHERE id=%s',
+                     (amount, user_id))
 
 
 def remove_balance(user_id, amount):
     with MySQL("UPDATE") as curs:
         curs.execute('UPDATE users SET balance = balance - %s WHERE id=%s',
-                     (user_id, amount))
+                     (amount, user_id))
