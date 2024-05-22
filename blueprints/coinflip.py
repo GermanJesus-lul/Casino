@@ -25,7 +25,7 @@ def flip():
     user_id = userid_from_token(request.cookies.get('token'))
     user_data = userdata_from_id(user_id)
 
-    if user_data['balance'] >= content['bet']:
+    if int(user_data['balance']) >= int(content['bet']):
         result = random.choice(["head", "tail"])
         if result == content["chocie"]:
             return "won"
