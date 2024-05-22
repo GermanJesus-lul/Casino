@@ -18,7 +18,18 @@ def coinflip_home():
                                balance=user_data['balance'])
 
 
-@coinflip_blueprint.route('/flip')
+@coinflip_blueprint.route('/flip', methods=["POST"])
 def flip():
-    ishead = random.getrandbits(1)
-    return str(ishead)
+    content = request.json
+
+    user_id = userid_from_token(request.cookies.get('token'))
+    user_data = userdata_from_id(user_id)
+
+    if user_data['balance'] >= content['bet']:
+        result = random.choice(["head", "tail"])
+        if result == content["chocie"]:
+            return "won"
+        else:
+            return "lost"
+    else:
+        return "not enough money"

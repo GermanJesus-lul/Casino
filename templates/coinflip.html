@@ -9,6 +9,21 @@
     {% include "menubar.html" %}
 
     <div>
+        <label for="bet">
+            Bet:
+            <input id="bet" type="number" value="10"/>
+        </label>
+
+        <label>
+            <input type="radio" value="head" name="choice" checked="checked">
+            Head
+        </label>
+
+        <label>
+            <input type="radio" value="tail" name="choice">
+            Tail
+        </label>
+
         <p id="result"></p>
         <button id="flip">Flip coin</button>
     </div>
