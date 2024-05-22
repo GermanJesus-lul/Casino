@@ -26,4 +26,4 @@ def before_request():
     if token:
         user_id = userid_from_token(token)
         if not user_id:
-            return redirect(url_for('user_administration_blueprint.login'))
+            return redirect(url_for('user_administration.login'))
