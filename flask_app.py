@@ -22,8 +22,10 @@ def before_request():
     if not request.is_secure:
         url = request.url.replace('http://', 'https://', 1)
         return redirect(url, code=301)
+
     token = request.cookies.get('token')
-    if token:
-        user_id = userid_from_token(token)
-        if not user_id:
-            return redirect(url_for('user_administration.login'))
+    if not token:
+        return redirect(url_for('user_administration.login'))
+    user_id = userid_from_token(token)
+    if not user_id:
+        return redirect(url_for('user_administration.login'))
