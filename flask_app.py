@@ -30,8 +30,10 @@ def before_request():
 def webhook():
     if request.method == 'POST':
         x_hub_signature = request.headers.get('X-Hub-Signature')
-        if not is_valid_signature(x_hub_signature, request.data, 'somewebhookpassword'):
+        if x_hub_signature is None:
             return 'Invalid call', 400
+        if not is_valid_signature(x_hub_signature, request.data, 'somewebhookpassword'):
+            return 'Invalid signature', 400
         repo = git.Repo('/home/Betonblock/Casino')
         origin = repo.remotes.origin
         origin.pull()
