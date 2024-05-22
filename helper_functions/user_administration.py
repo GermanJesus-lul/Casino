@@ -26,7 +26,7 @@ def register_user(username, password):
     phash = ph.hash(password)
     with MySQL("INSERT") as curs:
         curs.execute('INSERT INTO users (username, password, balance) VALUES (%s, %s, %s)',
-                     (username, phash, 0))
+                     (username, phash, 100))
 
 
 def create_token(username):
