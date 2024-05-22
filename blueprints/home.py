@@ -11,5 +11,5 @@ def homepage():
         user_data = userdata_from_id(user_id)
         # return home page with info
         return render_template("home.html",
-                               username=userdata_from_id(user_id)['username'],
-                               balance=userdata_from_id(user_id)['balance'])
+                               username=user_data['username'],
+                               balance=user_data['balance'])
