@@ -13,7 +13,7 @@ class MySQL:
         return self.cur
 
     def __exit__(self, *args):
-        if self.sql_type == "INSERT":
+        if self.sql_type in ["INSERT", "UPDATE"]:
             self.con.commit()
         self.cur.close()
         self.con.close()
