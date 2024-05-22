@@ -20,4 +20,5 @@ def coinflip_home():
 
 @coinflip_blueprint.route('/flip')
 def flip():
-    ishead = bool(random.getrandbits(1))
+    ishead = random.getrandbits(1)
+    return ishead

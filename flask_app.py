@@ -16,17 +16,16 @@ app.register_blueprint(user_administration_blueprint)
 app.register_blueprint(coinflip_blueprint, url_prefix='/coinflip')
 
 
-# force https
 @app.before_request
 def before_request():
-    url = request.url
+    # force https
     if not request.is_secure:
-        url = url.replace('http://', 'https://', 1)
+        url = request.url.replace('http://', 'https://', 1)
         return redirect(url, code=301)
 
-    # redirect to login
+    # redirect to login if required
     login_required = True
-    if str(request.url_rule) in ['/login', "/", '/update_server']:
+    if str(request.url_rule) in ['/login', '/register', "/", '/update_server']:
         login_required = False
     if str(request.url_rule).startswith('/static'):
         login_required = False

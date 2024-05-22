@@ -42,11 +42,6 @@ def register():
 @user_administration_blueprint.route('/account', methods=["GET", "POST"])
 def account():
     if request.method == "GET":
-        token = request.cookies.get('token')
-        if not token:
-            return redirect('/login')
-        user_id = userid_from_token(token)
-        if not user_id:
-            return redirect('/login')
+        user_id = userid_from_token(request.cookies.get('token'))
         # return account page (information, security etc.)
         return 'success ' + str(user_id)
