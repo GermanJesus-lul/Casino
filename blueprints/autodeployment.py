@@ -3,7 +3,7 @@ import git
 import hmac
 import hashlib
 
-autodeployment = Blueprint('autodeployment', __name__)
+autodeployment_blueprint = Blueprint('autodeployment', __name__)
 
 
 # check signature of GitHub webhook call
@@ -17,7 +17,7 @@ def is_valid_signature(x_hub_signature, data, private_key):
     return hmac.compare_digest(mac.hexdigest(), github_signature)
 
 
-@autodeployment.route('/update_server', methods=['POST'])
+@autodeployment_blueprint.route('/update_server', methods=['POST'])
 def update_server():
     if request.method == 'POST':
         x_hub_signature = request.headers.get('X-Hub-Signature')

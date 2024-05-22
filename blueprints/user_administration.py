@@ -1,10 +1,10 @@
 from flask import request, redirect, render_template, make_response, Blueprint
 from Casino.helper_functions.user_administration import *
 
-user_administration = Blueprint('user_administration', __name__)
+user_administration_blueprint = Blueprint('user_administration', __name__)
 
 
-@user_administration.route("/login", methods=["GET", "POST"])
+@user_administration_blueprint.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"]
@@ -21,7 +21,7 @@ def login():
         return render_template("login.html")
 
 
-@user_administration.route("/register", methods=["GET", "POST"])
+@user_administration_blueprint.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
@@ -39,7 +39,7 @@ def register():
         return render_template("register.html")
 
 
-@user_administration.route('/account', methods=["GET", "POST"])
+@user_administration_blueprint.route('/account', methods=["GET", "POST"])
 def account():
     if request.method == "GET":
         token = request.cookies.get('token')
