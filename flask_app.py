@@ -19,13 +19,15 @@ app.register_blueprint(coinflip_blueprint, url_prefix='/coinflip')
 # force https
 @app.before_request
 def before_request():
+    url = request.url
     if not request.is_secure:
-        url = request.url.replace('http://', 'https://', 1)
+        url = url.replace('http://', 'https://', 1)
         return redirect(url, code=301)
 
-    token = request.cookies.get('token')
-    if not token:
-        return redirect(url_for('user_administration.login'))
-    user_id = userid_from_token(token)
-    if not user_id:
-        return redirect(url_for('user_administration.login'))
+    if request.endpoint != 'user_administration.login':
+        token = request.cookies.get('token')
+        if not token:
+            return redirect(url_for('user_administration.login'))
+        user_id = userid_from_token(token)
+        if not user_id:
+            return redirect(url_for('user_administration.login'))
