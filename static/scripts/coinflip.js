@@ -5,14 +5,17 @@ let tailButton = document.getElementById("tail");
 var choice = "head"
 
 async function flip() {
-    const response = await fetch("/coinflip/flip", {
+    fetch("/coinflip/flip", {
         method: "POST",
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             "bet": document.getElementById("bet").value,
             "choice": choice
         })
-    });
-    document.getElementById("result").innerText = await response.text();
+    })
+    .then(async function (response) {
+        document.getElementById("result").innerText = await response.text();
+    })
 }
 
 headButton.addEventListener("click", function () {
