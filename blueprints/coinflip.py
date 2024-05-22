@@ -2,7 +2,7 @@ import random
 
 from flask import Blueprint, request, render_template, redirect, url_for
 
-from Casino.helper_functions.user_administration import userid_from_token, userdata_from_id
+from Casino.helper_functions.user_administration import userid_from_token, userdata_from_id, add_balance, remove_balance
 
 coinflip_blueprint = Blueprint('coinflip', __name__)
 
@@ -28,8 +28,10 @@ def flip():
     if int(user_data['balance']) >= int(content['bet']):
         result = random.choice(["head", "tail"])
         if result == content["choice"]:
+            add_balance(user_id, int(content['bet']))
             return "won"
         else:
+            remove_balance(user_id, int(content['bet']))
             return "lost"
     else:
         return "not enough money"
