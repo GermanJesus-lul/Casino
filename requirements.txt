@@ -4,9 +4,12 @@ blinker==1.7.0
 cffi==1.16.0
 click==8.1.7
 Flask==3.0.1
+gitdb==4.0.11
+GitPython==3.1.43
 itsdangerous==2.1.2
 Jinja2==3.1.3
 MarkupSafe==2.1.4
 mysql-connector-python==8.3.0
 pycparser==2.21
+smmap==5.0.1
 Werkzeug==3.0.1

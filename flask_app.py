@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, make_response, redirect
+import git
 
 from Casino.user_administration import *
 
@@ -10,6 +11,17 @@ def before_request():
     if not request.is_secure:
         url = request.url.replace('http://', 'https://', 1)
         return redirect(url, code=301)
+
+
+@app.route('/update_server', methods=['POST'])
+def webhook():
+    if request.method == 'POST':
+        repo = git.Repo('/home/Betonblock/Casino')
+        origin = repo.remotes.origin
+        origin.pull()
+        return 'Updated PythonAnywhere successfully', 200
+    else:
+        return 'Wrong event type', 400
 
 
 @app.route("/")
