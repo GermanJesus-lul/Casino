@@ -7,7 +7,7 @@ home_blueprint = Blueprint('home', __name__)
 @home_blueprint.route("/")
 def homepage():
     if request.method == "GET":
-        return request.url_rule
+        return str(request.url_rule)
         user_id = userid_from_token(request.cookies.get('token'))
         user_data = userdata_from_id(user_id)
         # return home page with info
