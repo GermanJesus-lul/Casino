@@ -25,7 +25,13 @@ def before_request():
         return redirect(url, code=301)
 
     # redirect to login
-    if str(request.url_rule) not in ['/login', "/", '/update_server']:
+    login_required = True
+    if str(request.url_rule) in ['/login', "/", '/update_server']:
+        login_required = False
+    if str(request.url_rule).startswith('/static'):
+        login_required = False
+
+    if login_required:
         token = request.cookies.get('token')
         if not token:
             return redirect(url_for('user_administration.login'))
