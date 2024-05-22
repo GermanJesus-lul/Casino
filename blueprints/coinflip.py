@@ -27,7 +27,7 @@ def flip():
 
     if int(user_data['balance']) >= int(content['bet']):
         result = random.choice(["head", "tail"])
-        if result == content["chocie"]:
+        if result == content["choice"]:
             return "won"
         else:
             return "lost"
