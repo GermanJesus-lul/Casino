@@ -24,4 +24,10 @@ def before_request():
         url = url.replace('http://', 'https://', 1)
         return redirect(url, code=301)
 
-    return request.endpoint
+    if str(request.url_rule) != '/login':
+        token = request.cookies.get('token')
+        if not token:
+            return redirect(url_for('user_administration.login'))
+        user_id = userid_from_token(token)
+        if not user_id:
+            return redirect(url_for('user_administration.login'))
