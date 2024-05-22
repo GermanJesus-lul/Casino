@@ -10,7 +10,7 @@ def homepage():
         token = request.cookies.get('token')
         if token:
             user_id = userid_from_token(token)
-            if not user_id:
+            if user_id:
                 user_data = userdata_from_id(user_id)
                 # return home page with info
                 return render_template("home.html",
