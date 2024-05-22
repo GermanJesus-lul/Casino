@@ -29,7 +29,7 @@ def before_request():
 @app.route('/update_server', methods=['POST'])
 def webhook():
     if request.method == 'POST':
-        x_hub_signature = request.headers.get('X - Hub - Signature')
+        x_hub_signature = request.headers.get('X-Hub-Signature')
         if not is_valid_signature(x_hub_signature, request.data, 'somewebhookpassword'):
             return 'Invalid call', 400
         repo = git.Repo('/home/Betonblock/Casino')
