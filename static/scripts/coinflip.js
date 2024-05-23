@@ -16,6 +16,9 @@ async function flip() {
     .then(async function (response) {
         document.getElementById("result").innerText = await response.text();
     })
+    .then(async function (response) {
+        updateUserdata()
+    })
 }
 
 headButton.addEventListener("click", function () {

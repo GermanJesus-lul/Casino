@@ -16,4 +16,3 @@ function updateUserdata() {
 }
 
 updateUserdata()
-setInterval(updateUserdata, 5000);
