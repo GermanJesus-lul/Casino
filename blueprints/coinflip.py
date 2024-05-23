@@ -1,6 +1,6 @@
 import random
 
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template
 
 from Casino.helper_functions.user_administration import userid_from_token, userdata_from_id, add_balance, remove_balance
 

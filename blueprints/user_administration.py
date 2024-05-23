@@ -45,3 +45,17 @@ def account():
         user_id = userid_from_token(request.cookies.get('token'))
         # return account page (information, security etc.)
         return 'success ' + str(user_id)
+
+
+@user_administration_blueprint.route("/logout", methods=["GET"])
+def logout():
+    resp = make_response(redirect('/'))
+    resp.set_cookie('token', '', expires=0)
+    return resp
+
+
+@user_administration_blueprint.route("/userdata", methods=["GET"])
+def userdata():
+    user_id = userid_from_token(request.cookies.get('token'))
+    userdata = userdata_from_id(user_id)
+    return userdata
