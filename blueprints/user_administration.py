@@ -42,9 +42,8 @@ def register():
 @user_administration_blueprint.route('/account', methods=["GET", "POST"])
 def account():
     if request.method == "GET":
-        user_id = userid_from_token(request.cookies.get('token'))
         # return account page (information, security etc.)
-        return 'success ' + str(user_id)
+        return render_template("account.html")
 
 
 @user_administration_blueprint.route("/logout", methods=["GET"])
@@ -57,5 +56,4 @@ def logout():
 @user_administration_blueprint.route("/userdata", methods=["GET"])
 def userdata():
     user_id = userid_from_token(request.cookies.get('token'))
-    userdata = userdata_from_id(user_id)
-    return userdata
+    return userdata_from_id(user_id)
