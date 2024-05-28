@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, url_for
 
-from Casino.helper_functions.user_administration import userid_from_token
+from helper_functions.user_administration import userid_from_token
 
 from blueprints.autodeployment import autodeployment_blueprint
 from blueprints.home import home_blueprint
