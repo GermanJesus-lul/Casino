@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>BlackJack</title>
+        <link rel="stylesheet" href="/static/styles/black_jack.css">
+    </head>
+
+    <body>
+        <header>
+            {% include "menubar.html" %}
+        </header>
+        <main>
+            <h1>BlackJack</h1>
+            <br>
+            <h2>Dealer: <span id="sumDealer"></span></h2>
+            <div id="cardsDealer">
+                <img id="hiddenCard" src="/static/images/card_deck_black_jack/back.svg" alt="Backside">
+            </div>
+            <br>
+            <h2>You: <span id="sumPlayer"></span></h2>
+            <div id="cardsPlayer">
+            </div>
+            <br>
+            <button id="hit">Hit</button>
+            <button id="stay">Stay</button>
+        </main>
+        <footer>
+
+        </footer>
+
+    </body>
+
+    </html>
