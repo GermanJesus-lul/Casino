@@ -3,18 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="/static/styles/login_register.css">
 </head>
 <body style="margin: 0; padding: 0;">
 
     {% include 'menubar.html' %}
 
-    <form action="/login" method="post">
-        <label for="username">Username</label>
-        <input id="username" type="text" name="username"/>
-        <label for="password">Password</label>
-        <input id="password" type="text" name="password"/>
-        <input type="submit"/>
-    </form>
-    <p>Don't have an account? <a href="/register">Click here</a></p>
+    <div id="content">
+        <form action="/login" method="post">
+            <div>
+                <input id="username" type="text" name="username" placeholder="Username"/>
+            </div>
+            <div>
+                <input id="password" type="password" name="password" placeholder="Password"/>
+            </div>
+            <div>
+                <input type="submit" value="Log In"/>
+            </div>
+        </form>
+
+        <div id="other-method-div">
+            <a id="other-method" href="/register">Create new account</a>
+        </div>
+    </div>
+
 </body>
 </html>
