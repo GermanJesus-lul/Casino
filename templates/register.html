@@ -3,18 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" href="/static/styles/register.css">
+    <link rel="stylesheet" href="/static/styles/login_register.css">
 </head>
 <body style="margin: 0; padding: 0;">
 
     {% include 'menubar.html' %}
 
-    <form action="/register" method="post">
-        <label for="username">Username</label>
-        <input id="username" type="text" name="username"/>
-        <label for="password">Password</label>
-        <input id="password" type="text" name="password"/>
-        <input type="submit"/>
-    </form>
+    <div id="content">
+        <form action="/register" method="post">
+            <div>
+                <input id="username" type="text" name="username" placeholder="Username"/>
+            </div>
+            <div>
+                <input id="password" type="password" name="password" placeholder="Password"/>
+            </div>
+            <div>
+                <input type="submit" value="Register"/>
+            </div>
+        </form>
+
+        <div id="other-method-div">
+            <a id="other-method" href="/login">Log in to existing account</a>
+        </div>
+    </div>
 </body>
 </html>
