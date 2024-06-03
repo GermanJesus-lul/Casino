@@ -1,5 +1,5 @@
 from flask import request, redirect, render_template, make_response, Blueprint
-from Casino.helper_functions.user_administration import *
+from helper_functions.user_administration import *
 
 user_administration_blueprint = Blueprint('user_administration', __name__)
 
@@ -15,7 +15,7 @@ def login():
                 resp = make_response(redirect('/account'))
                 resp.set_cookie('token', token)
                 return resp
-        return "failed"
+        return render_template("errorpage.html", error="Log in failed", redirect="/login")
 
     elif request.method == "GET":
         return render_template("login.html")
@@ -27,7 +27,7 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         if user_exists(username):
-            return "user already exists"
+            return render_template("errorpage.html", error="Username already exists", redirect="/register")
         else:
             register_user(username, password)
             token = create_token(username)

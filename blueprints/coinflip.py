@@ -2,7 +2,7 @@ import random
 
 from flask import Blueprint, request, render_template
 
-from Casino.helper_functions.user_administration import userid_from_token, userdata_from_id, add_balance, remove_balance
+from helper_functions.user_administration import userid_from_token, userdata_from_id, add_balance, remove_balance
 
 coinflip_blueprint = Blueprint('coinflip', __name__)
 
