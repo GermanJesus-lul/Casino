@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
-<body>
+<body style="margin: 0; padding: 0;">
+
+    {% include 'menubar.html' %}
+
     <form action="/login" method="post">
         <label for="username">Username</label>
         <input id="username" type="text" name="username"/>
