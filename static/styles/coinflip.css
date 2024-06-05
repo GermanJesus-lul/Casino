@@ -1,0 +1,49 @@
+body {
+    text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#flip {
+    color: black;
+    background-color: #8FB8DE;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    width: fit-content;
+}
+
+#flip:hover {
+    cursor: pointer;
+}
+
+#bet {
+    border: none;
+    border-bottom: 2px solid #8FB8DE;
+    text-align:center;
+    font-size: 18px;
+    width: fit-content;
+}
+
+#bet::-webkit-outer-spin-button,
+#bet::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.input-number-button {
+    color: black;
+    background-color: #8FB8DE;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+#bet-div {
+    margin: 1%;
+}
+
+.choice-radio-label {
+    font-size: 18px;
+}
