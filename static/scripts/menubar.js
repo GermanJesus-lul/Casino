@@ -1,5 +1,5 @@
 function updateUserdata() {
-    if (document.cookie.indexOf('token=') >= 0) {
+    if (document.cookie.indexOf('token') >= 0) {
         fetch("/userdata")
         .then(async function (response) {
             let responseJson = await response.json();
