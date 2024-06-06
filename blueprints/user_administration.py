@@ -42,7 +42,7 @@ def register():
 @user_administration_blueprint.route("/logout", methods=["GET"])
 def logout():
     resp = make_response(redirect('/'))
-    resp.delete_cookie('token')
+    resp.delete_cookie('token', path='/', domain='casino.juliusgic.com')
     return resp
 
 
