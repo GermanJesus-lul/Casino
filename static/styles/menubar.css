@@ -3,6 +3,7 @@ body {
 }
 a {
     all: unset;
+    cursor: pointer;
 }
 
 #menubar {
