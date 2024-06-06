@@ -13,3 +13,4 @@ mysql-connector-python==8.3.0
 pycparser==2.21
 smmap==5.0.1
 Werkzeug==3.0.1
+python-dotenv

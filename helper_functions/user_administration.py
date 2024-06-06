@@ -1,4 +1,4 @@
-from Casino.helper_functions.mysqlClass import MySQL
+from helper_functions.mysqlClass import MySQL
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 import secrets
