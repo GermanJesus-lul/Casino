@@ -39,13 +39,6 @@ def register():
         return render_template("register.html")
 
 
-@user_administration_blueprint.route('/account', methods=["GET", "POST"])
-def account():
-    if request.method == "GET":
-        # return account page (information, security etc.)
-        return render_template("account.html")
-
-
 @user_administration_blueprint.route("/logout", methods=["GET"])
 def logout():
     resp = make_response(redirect('/'))
