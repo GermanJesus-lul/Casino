@@ -74,7 +74,7 @@ def played_game(user_id, balance, game_name, double_field=None, text_field=None)
         game_id = curs.fetchone()[0]
     # update game stats
     with MySQL("UPDATE") as curs:
-        curs.execute('UPDATE games SET total_value = total_value + %s, games_played = game_played + 1 WHERE id=%s',
+        curs.execute('UPDATE games SET total_value = total_value + %s, games_played = games_played + 1 WHERE id=%s',
                      (balance, game_id))
     # add history item
     with MySQL("INSERT") as curs:
