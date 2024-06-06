@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Account</title>
+    <link rel="stylesheet" href="/static/styles/account.css">
 </head>
 <body style="margin: 0; padding: 0;">
 
     {% include "menubar.html" %}
+
+    <div id="stats">
+        <p id="stats-header">Statistics</p>
+        <div class="stats-element">
+            <p class="stats-element-header">Coinflip</p>
+            <p class="stats-element-entry">Games played: 10</p>
+            <p class="stats-element-entry">Balance: 120</p>
+        </div>
+        <div class="stats-element">
+            <p class="stats-element-header">Blackjack</p>
+            <p class="stats-element-entry">Games played: 0</p>
+            <p class="stats-element-entry">Balance: 0</p>
+        </div>
+    </div>
 
     <button id="logout">Log out</button>
 

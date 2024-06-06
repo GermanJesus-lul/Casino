@@ -1,3 +1,10 @@
+<<<<<<< accountPage
+* {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+=======
+>>>>>>> main
 #logout {
     color: black;
     background-color: #cd4156;
@@ -9,4 +16,21 @@
 
 #logout:hover {
     cursor: pointer;
+<<<<<<< accountPage
+}
+
+#stats-header {
+    font-size: 28px;
+    font-weight: bolder;
+}
+
+.stats-element-header {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.stats-element-entry {
+    font-size: 18px;
+=======
+>>>>>>> main
 }
