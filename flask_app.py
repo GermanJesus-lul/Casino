@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.register_blueprint(autodeployment_blueprint)
 app.register_blueprint(home_blueprint)
 app.register_blueprint(user_administration_blueprint)
-app.register_blueprint(account_blueprint, url_prefix='/account')
+app.register_blueprint(account_blueprint)
 
 # games
 app.register_blueprint(coinflip_blueprint, url_prefix='/coinflip')
