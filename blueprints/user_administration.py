@@ -42,7 +42,7 @@ def register():
 @user_administration_blueprint.route("/logout", methods=["GET"])
 def logout():
     resp = make_response(redirect('/'))
-    resp.set_cookie('token', '', expires=0)
+    resp.delete_cookie('token')
     return resp
 
 
