@@ -2,7 +2,7 @@ import random
 
 from flask import Blueprint, request, render_template
 
-from helper_functions.user_administration import userid_from_token, userdata_from_id, add_balance, remove_balance
+from helper_functions.user_administration import userid_from_token, userdata_from_id, update_balance, played_game
 
 coinflip_blueprint = Blueprint('coinflip', __name__)
 
@@ -23,10 +23,16 @@ def flip():
     if int(user_data['balance']) >= int(content['bet']):
         result = random.choice(["head", "tail"])
         if result == content["choice"]:
-            add_balance(user_id, int(content['bet']))
+            bet_value = int(content['bet'])
+        else:
+            bet_value = -int(content['bet'])
+
+        update_balance(user_id, bet_value)
+        played_game(user_id, int(content['bet']), "coinflip", text_field=result)
+
+        if bet_value > 0:
             return "won"
         else:
-            remove_balance(user_id, int(content['bet']))
             return "lost"
     else:
         return "not enough money"

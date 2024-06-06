@@ -61,13 +61,23 @@ def userdata_from_id(user_id):
         return None
 
 
-def add_balance(user_id, amount):
+def update_balance(user_id, amount):
     with MySQL("UPDATE") as curs:
         curs.execute('UPDATE users SET balance = balance + %s WHERE id=%s',
                      (amount, user_id))
 
 
-def remove_balance(user_id, amount):
+def played_game(user_id, balance, game_name, double_field=None, text_field=None):
+    # get game_id
+    with MySQL("SELECT") as curs:
+        curs.execute('SELECT id FROM games WHERE name=%s;', (game_name,))
+        game_id = curs.fetchone()[0]
+    # update game stats
     with MySQL("UPDATE") as curs:
-        curs.execute('UPDATE users SET balance = balance - %s WHERE id=%s',
-                     (amount, user_id))
+        curs.execute('UPDATE games SET total_value = total_value + %s, games_played = game_played + 1 WHERE id=%s',
+                     (balance, game_id))
+    # add history item
+    with MySQL("INSERT") as curs:
+        curs.execute('INSERT INTO history (user_id, value, game_id, field_1, field_2)'
+                     ' VALUES (%s, %s, %s, %s, %s)',
+                     (user_id, balance, game_id, double_field, text_field))
