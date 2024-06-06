@@ -1,22 +1,23 @@
-<<<<<<< accountPage
 * {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-=======
->>>>>>> main
+body {
+    text-align: center;
+}
+
 #logout {
     color: black;
-    background-color: #cd4156;
+    background-color: #e33d52;
     border: none;
     border-radius: 5px;
+    padding: 1%;
     font-size: 18px;
     width: fit-content;
 }
 
 #logout:hover {
     cursor: pointer;
-<<<<<<< accountPage
 }
 
 #stats-header {
@@ -30,7 +31,5 @@
 }
 
 .stats-element-entry {
-    font-size: 18px;
-=======
->>>>>>> main
+    font-size: 18px;+
 }
