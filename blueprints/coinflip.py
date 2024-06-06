@@ -28,7 +28,7 @@ def flip():
             bet_value = -int(content['bet'])
 
         update_balance(user_id, bet_value)
-        played_game(user_id, int(content['bet']), "coinflip", text_field=result)
+        played_game(user_id, bet_value, "coinflip", text_field=result)
 
         if bet_value > 0:
             return "won"
