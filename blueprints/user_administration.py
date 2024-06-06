@@ -39,13 +39,6 @@ def register():
         return render_template("register.html")
 
 
-@user_administration_blueprint.route("/logout", methods=["GET"])
-def logout():
-    resp = make_response(redirect('/'))
-    resp.delete_cookie('token', path='/', domain='casino.juliusgic.com')
-    return resp
-
-
 @user_administration_blueprint.route("/userdata", methods=["GET"])
 def userdata():
     user_id = userid_from_token(request.cookies.get('token'))
