@@ -23,12 +23,12 @@ fetch("/stats")
             element_div.appendChild(header);
 
             const games_played = document.createElement("p");
-            games_played.innerText = responseJson[key]["games_played"];
+            games_played.innerText = "Games played: " + responseJson[key]["games_played"];
             games_played.setAttribute("class", "stats-element-entry");
             element_div.appendChild(games_played);
 
             const balance = document.createElement("p");
-            balance.innerText = responseJson[key]["value"];
+            balance.innerText = "Balance: " + responseJson[key]["value"];
             balance.setAttribute("class", "stats-element-entry");
             element_div.appendChild(balance);
 
