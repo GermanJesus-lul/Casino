@@ -25,7 +25,7 @@ def get_history_stats(user_id):
 
     # remove games that have not been played yet
     for stat in stats:
-        if stat['games_played'] == 0:
+        if stats[stat]['games_played'] == 0:
             del stats[stat]
 
     return stats
