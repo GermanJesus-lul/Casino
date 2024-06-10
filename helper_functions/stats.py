@@ -6,7 +6,7 @@ def get_history_stats(user_id):
     games = {}
     # get data from db
     with SQL("SELECT") as curs:
-        curs.execute("SELECT game_id, value FROM history WHERE user_id = ?", (user_id,))
+        curs.execute(f'SELECT game_id, value FROM history WHERE user_id = {user_id}')
         history_rows = curs.fetchall()
     with SQL("SELECT") as curs:
         curs.execute('SELECT id, name FROM games')
