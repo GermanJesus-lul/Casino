@@ -1,14 +1,14 @@
-from helper_functions.mysqlClass import MySQL
+from helper_functions.sqlClass import SQL
 
 
 def get_history_stats(user_id):
     stats = {}
     games = {}
     # get data from db
-    with MySQL("SELECT") as curs:
-        curs.execute("SELECT game_id, value FROM history WHERE user_id = %s", (user_id,))
+    with SQL("SELECT") as curs:
+        curs.execute("SELECT game_id, value FROM history WHERE user_id = ?", (user_id,))
         history_rows = curs.fetchall()
-    with MySQL("SELECT") as curs:
+    with SQL("SELECT") as curs:
         curs.execute('SELECT id, name FROM games')
 
         for row in curs.fetchall():
