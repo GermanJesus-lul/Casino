@@ -74,5 +74,15 @@ def played_game(user_id, balance, game_name, double_field=None, text_field=None)
         curs.execute(f'UPDATE games SET total_value = total_value + {balance}, games_played = games_played + 1 WHERE id={game_id}')
     # add history item
     with SQL("INSERT") as curs:
-        curs.execute(f'INSERT INTO history (user_id, value, game_id, field_1, field_2)'
-                     f' VALUES ({user_id}, {balance}, {game_id}, {double_field}, "{text_field}")')
+        if double_field is not None and text_field is not None:
+            curs.execute(f'INSERT INTO history (user_id, value, game_id, field_1, field_2)'
+                         f' VALUES ({user_id}, {balance}, {game_id}, {double_field}, "{text_field}")')
+        elif double_field is not None:
+            curs.execute(f'INSERT INTO history (user_id, value, game_id, field_1)'
+                         f' VALUES ({user_id}, {balance}, {game_id}, {double_field})')
+        elif text_field is not None:
+            curs.execute(f'INSERT INTO history (user_id, value, game_id, field_2)'
+                         f' VALUES ({user_id}, {balance}, {game_id}, "{text_field}")')
+        else:
+            curs.execute(f'INSERT INTO history (user_id, value, game_id)'
+                         f' VALUES ({user_id}, {balance}, {game_id})')
