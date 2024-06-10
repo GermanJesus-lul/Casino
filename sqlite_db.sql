@@ -31,3 +31,6 @@ CREATE TABLE IF NOT EXISTS history (
   FOREIGN KEY (game_id) REFERENCES games (id),
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
+
+INSERT INTO games (name, games_played, total_value) VALUES ("coinflip", 0, 0);
+INSERT INTO games (name, games_played, total_value) VALUES ("blackjack", 0, 0);
