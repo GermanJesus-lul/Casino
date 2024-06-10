@@ -8,6 +8,9 @@ from blueprints.user_administration import user_administration_blueprint
 from blueprints.coinflip import coinflip_blueprint
 from blueprints.account import account_blueprint
 
+import sqlite3
+import config
+
 app = Flask(__name__)
 app.register_blueprint(autodeployment_blueprint)
 app.register_blueprint(home_blueprint)
@@ -21,7 +24,7 @@ app.register_blueprint(coinflip_blueprint, url_prefix='/coinflip')
 @app.before_request
 def before_request():
     # force https
-    if not request.is_secure:
+    if not request.is_secure and not config.LOCAL:
         url = request.url.replace('http://', 'https://', 1)
         return redirect(url, code=301)
 
@@ -39,3 +42,15 @@ def before_request():
         user_id = userid_from_token(token)
         if not user_id:
             return redirect(url_for('user_administration.login'))
+
+
+if __name__ == '__main__':
+    # create local sqlite3 database
+    con = sqlite3.connect('/Users/juliusgoler/python_projects/Casino/database.db')
+    cur = con.cursor()
+    with open('sqlite_db.sql') as f:
+        cur.executescript(f.read())
+    con.commit()
+    con.close()
+
+    app.run()
