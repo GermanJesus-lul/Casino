@@ -15,8 +15,8 @@ class SQL:
     def __enter__(self):
         if not config.local():
             self.con = mysql.connector.connect(user=DBUSER, password=DBPASS,
-                                               host='Betonblock.mysql.pythonanywhere-services.com',
-                                               database='Betonblock$casino')
+                                               host=config.db_host(),
+                                               database=config.db_database())
             self.cur = self.con.cursor(buffered=True)
             return self.cur
         else:
