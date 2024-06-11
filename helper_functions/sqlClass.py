@@ -2,7 +2,7 @@ import mysql.connector
 import sqlite3
 import os
 
-from config import LOCAL
+import config
 
 DBUSER = os.getenv('DBUSER')
 DBPASS = os.getenv('DBPASS')
@@ -13,7 +13,7 @@ class SQL:
         self.sql_type = sql_type
 
     def __enter__(self):
-        if not LOCAL:
+        if not config.local():
             self.con = mysql.connector.connect(user=DBUSER, password=DBPASS,
                                                host='Betonblock.mysql.pythonanywhere-services.com',
                                                database='Betonblock$casino')
@@ -21,7 +21,7 @@ class SQL:
             return self.cur
         else:
             # local database
-            self.con = sqlite3.connect('/Users/juliusgoler/python_projects/Casino/database.db')
+            self.con = sqlite3.connect(config.db_path())
             self.cur = self.con.cursor()
             return self.cur
 
