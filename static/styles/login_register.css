@@ -42,3 +42,8 @@ input[type=submit] {
     background-color: #b7d6f3;
     padding: 0.5%;
 }
+
+#other-method:hover,
+input[type=submit]:hover {
+    cursor: pointer;
+}
