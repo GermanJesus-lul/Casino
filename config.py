@@ -15,7 +15,7 @@ def local():
 def db_path():
     return load_config()['db_path']
 
-
+  
 def db_host():
     return load_config()['db_host']
 
