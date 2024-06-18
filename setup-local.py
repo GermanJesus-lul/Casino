@@ -4,7 +4,10 @@ import os
 
 db_path = os.path.dirname(os.path.abspath(__file__)) + '/database.db'
 
-os.remove(db_path)
+try:
+    os.remove(db_path)
+except FileNotFoundError:
+    pass
 
 # create local sqlite3 database
 con = sqlite3.connect(db_path)
