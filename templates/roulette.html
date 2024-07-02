@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Roulette</title>
+    <link rel="stylesheet" href="/static/styles/roulette.css">
+</head>
+<body>
+    {% include "menubar.html" %}
+
+    <div>
+        <img alt="Wheel" id="wheel_img" src="/static/images/roulette/roulette_wheel.svg">
+    </div>
+
+    <div id="bet-div">
+            <label for="bet" style="font-size: 18px">
+                Bet:
+            </label>
+            <div style="display: inline">
+
+                <button type="button" class="input-number-button" onclick="this.parentNode.querySelector('[type=number]').stepDown();">
+                    -
+                </button>
+                <input id="bet" type="number" value="10"/>
+                <button type="button" class="input-number-button" onclick="this.parentNode.querySelector('[type=number]').stepUp();">
+                    +
+                </button>
+            </div>
+        </div>
+
+    <label class="choice-radio-label">
+            <input class="choice-radio-button" type="radio" value="red" id="red" name="choice" checked="checked">
+            Red
+        </label>
+
+        <label class="choice-radio-label">
+            <input class="choice-radio-button" type="radio" value="black" id="black" name="choice">
+            Black
+        </label>
+
+        <button id="spin">Spin coin</button>
+
+<script type="text/javascript" src="/static/scripts/roulette.js"></script>
+</body>
+</html>
