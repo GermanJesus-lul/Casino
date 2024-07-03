@@ -33,7 +33,7 @@ def spin():
             bet_value = -int(content['bet'])
 
         update_balance(user_id, bet_value)
-        # played_game(user_id, bet_value, "roulette", text_field=str(result))
+        played_game(user_id, bet_value, "roulette", text_field=str(result))
 
         return str(result)
     else:

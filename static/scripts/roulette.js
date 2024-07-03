@@ -8,7 +8,7 @@ const numberToPositionIndex = [0, 26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 2
 let choice = "red"
 
 async function spin() {
-
+    wheel.classList.add("spinning");
     fetch("/roulette/spin", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -20,6 +20,7 @@ async function spin() {
     .then(async function (response) {
         var positionIndex = parseInt(await response.text());
         var result = numberToPositionIndex[positionIndex]
+        wheel.classList.remove("spinning");
         wheel.style.transform = `rotate(${result * 9.473684210526316}deg)`
     })
     .then(async function (response) {

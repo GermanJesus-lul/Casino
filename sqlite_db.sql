@@ -34,3 +34,4 @@ CREATE TABLE IF NOT EXISTS history (
 
 INSERT INTO games (name, games_played, total_value) VALUES ("coinflip", 0, 0);
 INSERT INTO games (name, games_played, total_value) VALUES ("blackjack", 0, 0);
+INSERT INTO games (name, games_played, total_value) VALUES ("roulette", 0, 0);
