@@ -1,6 +1,7 @@
 import json
 import sqlite3
 import os
+from argon2 import PasswordHasher
 
 db_path = os.path.dirname(os.path.abspath(__file__)) + '/database.db'
 
@@ -15,6 +16,13 @@ cur = con.cursor()
 with open('sqlite_db.sql') as f:
     cur.executescript(f.read())
 con.commit()
+
+# add testing user (test:test)
+ph = PasswordHasher()
+phash = ph.hash("test")
+cur.execute(f'INSERT INTO users (username, password, balance) VALUES ("test", "{phash}", 100)')
+con.commit()
+
 con.close()
 
 
