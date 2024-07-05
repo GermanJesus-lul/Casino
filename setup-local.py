@@ -3,6 +3,7 @@ import sqlite3
 import os
 
 db_path = os.path.dirname(os.path.abspath(__file__)) + '/database.db'
+
 try:
     os.remove(db_path)
 except FileNotFoundError:
