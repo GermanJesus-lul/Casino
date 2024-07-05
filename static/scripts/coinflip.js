@@ -30,7 +30,7 @@ async function flip() {
         } else if (result === "lost") {
             if (choice === "head") {
                 coin.src = img_tails;
-            } else {//
+            } else {
                 coin.src = img_heads;
             }
         }

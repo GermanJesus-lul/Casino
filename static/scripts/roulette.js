@@ -9,23 +9,23 @@ let choice = "red"
 
 async function spin() {
     wheel.classList.add("spinning");
-    fetch("/roulette/spin", {
+    const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2000));
+    const fetchPromise = fetch("/roulette/spin", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             "bet": document.getElementById("bet").value,
             "choice": choice
         })
-    })
-    .then(async function (response) {
-        var positionIndex = parseInt(await response.text());
-        var result = numberToPositionIndex[positionIndex]
+    }).then(response => response.text());
+
+    Promise.all([fetchPromise, timeoutPromise]).then(async (values) => {
+        const positionIndex = parseInt(values[0]);
+        const result = numberToPositionIndex[positionIndex];
         wheel.classList.remove("spinning");
-        wheel.style.transform = `rotate(${result * 9.473684210526316}deg)`
-    })
-    .then(async function (response) {
-        updateUserdata()
-    })
+        wheel.style.transform = `rotate(${result * 9.473684210526316}deg)`;
+        updateUserdata();
+    });
 }
 
 redButton.addEventListener("click", function () {
