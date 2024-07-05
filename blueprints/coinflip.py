@@ -11,7 +11,7 @@ coinflip_blueprint = Blueprint('coinflip', __name__)
 @coinflip_blueprint.route('/')
 def coinflip_home():
     if request.method == "GET":
-        return render_template("coinflip.html")
+        return render_template("coinflip/coinflip.html")
 
 
 @coinflip_blueprint.route('/flip', methods=["POST"])
