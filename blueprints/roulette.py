@@ -2,8 +2,8 @@ import random
 
 from flask import Blueprint, request, render_template
 
-from helper_functions.user_administration import userid_from_token, userdata_from_id, update_balance, played_game
-
+from helper_functions.user_administration import userid_from_token, userdata_from_id, update_balance
+from helper_functions.stats import played_game
 roulette_blueprint = Blueprint('roulette', __name__)
 
 red = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
