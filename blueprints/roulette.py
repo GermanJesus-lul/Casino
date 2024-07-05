@@ -14,7 +14,7 @@ green = [0]
 @roulette_blueprint.route('/')
 def roulette_home():
     if request.method == "GET":
-        return render_template("roulette.html")
+        return render_template("roulette/roulette.html")
 
 
 @roulette_blueprint.route('/spin', methods=["POST"])

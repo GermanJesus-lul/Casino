@@ -40,7 +40,8 @@ def userid_from_token(token):
     with SQL("SELECT") as curs:
         curs.execute(f'SELECT user_id, created_at FROM sessions WHERE token="{str(token)}"')
         x = curs.fetchall()
-    if x is not None:
+    if x is not None and len(x) > 0:
+        print(x)
         return x[0][0]
     else:
         return None
@@ -50,7 +51,7 @@ def userdata_from_id(user_id):
     with SQL("SELECT") as curs:
         curs.execute(f"SELECT username, balance FROM users WHERE id={str(user_id)}")
         x = curs.fetchall()
-    if x is not None:
+    if x is not None and len(x) > 0:
         return {
             'username': x[0][0],
             'balance': x[0][1]
