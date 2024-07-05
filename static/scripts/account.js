@@ -27,10 +27,10 @@ fetch("/stats")
             games_played.setAttribute("class", "stats-element-entry");
             element_div.appendChild(games_played);
 
-            const balance = document.createElement("p");
-            balance.innerText = "Balance: " + responseJson[key]["value"];
-            balance.setAttribute("class", "stats-element-entry");
-            element_div.appendChild(balance);
+            const profit = document.createElement("p");
+            profit.innerText = "Profit: " + responseJson[key]["value"];
+            profit.setAttribute("class", "stats-element-entry");
+            element_div.appendChild(profit);
 
             stats_div.appendChild(element_div);
         })
