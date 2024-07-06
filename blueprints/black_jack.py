@@ -77,6 +77,9 @@ def deal():
 
 @black_jack_blueprint.route('/hit', methods=["POST"])
 def hit():
+    global deck
+    if not deck:
+        build_deck()
     card = deck.pop()
     card_value = get_value(card)
     card_ace = check_ace(card)
