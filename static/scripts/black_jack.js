@@ -28,7 +28,7 @@ window.onload = function() {
 
             data.player_cards.forEach(card => {
                 let cardImg = document.createElement("img");
-                cardImg.src = `/static/images/card_deck_black_jack/${card}.svg`;
+                cardImg.src = `/static/images/card_deck_black_jack/${data.card}.svg`;
                 document.getElementById("playerCards").append(cardImg);
 
             });
@@ -46,11 +46,11 @@ function hit() {
     if (!canHit) {
         return;
     }
-    fetch('/black_jack/hit', {method: 'POST'})
+    fetch('/black_jack/hit', {method: 'POST', headers: {'Content-Type': 'application/json'}})
         .then(response => response.json())
         .then(data => {
             let cardImg = document.createElement('img');
-            cardImg.src = `/static/images/cards/${data.card}.svg`;
+            cardImg.src = `/static/images/card_deck_black_jack/${data.card}.svg`;
             document.getElementById('cardsPlayer').append(cardImg);
 
             yourSum += data.value;
