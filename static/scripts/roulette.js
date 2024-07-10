@@ -8,7 +8,6 @@ const numberToPositionIndex = [0, 26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 2
 let choice = "red"
 
 async function spin() {
-    wheel.classList.add("spinning");
     const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2000));
     const fetchPromise = fetch("/roulette/spin", {
         method: "POST",
@@ -22,8 +21,14 @@ async function spin() {
     Promise.all([fetchPromise, timeoutPromise]).then(async (values) => {
         const positionIndex = parseInt(values[0]);
         const result = numberToPositionIndex[positionIndex];
-        wheel.classList.remove("spinning");
-        wheel.style.transform = `rotate(${result * 9.473684210526316}deg)`;
+        const targetDeg = result * 9.473684210526316;
+        wheel.style.setProperty("--target-deg", `${targetDeg + (3*360)}deg`);
+        wheel.classList.add("spinning");
+        wheel.addEventListener("animationend", function () {
+            wheel.style.transform = `rotate(${result * 9.473684210526316}deg)`;
+            wheel.classList.remove("spinning");
+            wheel.style.setProperty("--start-deg", `${targetDeg}deg`);
+        } , {once: true});
         updateUserdata();
     });
 }

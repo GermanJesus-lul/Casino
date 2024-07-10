@@ -8,6 +8,11 @@ body {
     height: 35%;
 }
 
+#ball_img {
+    width: 5%;
+    height: 5%;
+}
+
 #spin {
     color: black;
     background-color: #8FB8DE;
@@ -55,15 +60,21 @@ body {
     cursor: pointer;
 }
 
+root {
+    --start-deg: 0deg;
+    --target-deg: 0deg;
+}
+
 @keyframes spin {
   from {
-    transform: rotate(0deg);
+    transform: rotate(var(--start-deg));
   }
   to {
-    transform: rotate(540deg);
+    transform: rotate(var(--target-deg));
   }
 }
 
 .spinning {
-  animation: spin 1s linear infinite;
+  animation: spin 5s ease-out forwards;
 }
+
