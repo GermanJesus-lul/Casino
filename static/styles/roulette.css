@@ -3,14 +3,26 @@ body {
     text-align: center;
 }
 
+.roulette {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #wheel_img {
+    position: relative;
     width: 35%;
     height: 35%;
 }
 
 #ball_img {
-    width: 5%;
-    height: 5%;
+    position: absolute;
+    /* Adjust these values based on the wheel's size and desired ball position */
+    top: 27%; /* Example value, adjust as needed */
+    left: 50%; /* Centers the ball horizontally on the wheel */
+    transform: translate(-50%, -50%); /* Adjusts the positioning to center the ball based on its own size */
+    height: 7%;
 }
 
 #spin {
@@ -77,4 +89,3 @@ root {
 .spinning {
   animation: spin 5s ease-out forwards;
 }
-
