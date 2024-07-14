@@ -18,11 +18,36 @@ body {
 
 #ball_img {
     position: absolute;
-    /* Adjust these values based on the wheel's size and desired ball position */
-    top: 27%; /* Example value, adjust as needed */
-    left: 50%; /* Centers the ball horizontally on the wheel */
-    transform: translate(-50%, -50%); /* Adjusts the positioning to center the ball based on its own size */
+    top: 27%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     height: 7%;
+}
+
+#bet-type {
+    font-size: 18px;
+    border: 2px solid #8FB8DE;
+    border-radius: 5px;
+    background-color: #8FB8DE;
+    padding-right: 15px;
+    padding-left: 5px;
+    width: fit-content;
+    cursor: pointer;
+    outline: none;
+}
+
+#bet-type {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('/static/images/roulette/dropdown_arrow.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 12px;
+}
+
+#input-container {
+    margin: 1%;
 }
 
 #spin {
@@ -34,20 +59,22 @@ body {
     width: fit-content;
 }
 
-#bet {
+#bet, #number {
     border: none;
     border-bottom: 2px solid #8FB8DE;
-    text-align:center;
+    text-align: center;
     font-size: 18px;
     width: fit-content;
 }
 
 #bet::-webkit-outer-spin-button,
-#bet::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  margin: 0;
+#bet::-webkit-inner-spin-button,
+#number::-webkit-outer-spin-button,
+#number::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
 }
 
 .input-number-button {
@@ -75,17 +102,18 @@ body {
 root {
     --start-deg: 0deg;
     --target-deg: 0deg;
+    --target-wait-deg: 360deg;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(var(--start-deg));
-  }
-  to {
-    transform: rotate(var(--target-deg));
-  }
+    from {
+        transform: rotate(var(--start-deg));
+    }
+    to {
+        transform: rotate(var(--target-deg));
+    }
 }
 
 .spinning {
-  animation: spin 5s ease-out forwards;
+    animation: spin 5s ease-out forwards;
 }
