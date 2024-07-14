@@ -6,40 +6,41 @@
     <link rel="stylesheet" href="/static/styles/roulette.css">
 </head>
 <body>
-    {% include "menubar.html" %}
+{% include "menubar.html" %}
 
-    <div class="roulette">
-        <img alt="Wheel" id="wheel_img" src="/static/images/roulette/roulette_wheel.svg">
-        <img alt="Ball" id="ball_img" src="/static/images/roulette/roulette_ball.png">
+<div class="roulette">
+    <img alt="Wheel" id="wheel_img" src="/static/images/roulette/roulette_wheel.svg">
+    <img alt="Ball" id="ball_img" src="/static/images/roulette/roulette_ball.png">
+</div>
+
+<div id="bet-div">
+    <label for="bet" style="font-size: 18px">
+        Bet:
+    </label>
+    <div style="display: inline">
+
+        <button type="button" class="input-number-button"
+                onclick="this.parentNode.querySelector('[type=number]').stepDown();">
+            -
+        </button>
+        <input id="bet" type="number" value="10"/>
+        <button type="button" class="input-number-button"
+                onclick="this.parentNode.querySelector('[type=number]').stepUp();">
+            +
+        </button>
     </div>
+</div>
 
-    <div id="bet-div">
-            <label for="bet" style="font-size: 18px">
-                Bet:
-            </label>
-            <div style="display: inline">
+<select id="bet-type">
+    <option value="number">Single Number</option>
+    <option value="color">Color</option>
+    <option value="evenodd">Even/Odd</option>
+    <!-- Add other betting options here -->
+</select>
 
-                <button type="button" class="input-number-button" onclick="this.parentNode.querySelector('[type=number]').stepDown();">
-                    -
-                </button>
-                <input id="bet" type="number" value="10"/>
-                <button type="button" class="input-number-button" onclick="this.parentNode.querySelector('[type=number]').stepUp();">
-                    +
-                </button>
-            </div>
-        </div>
+<div id="input-container"></div>
 
-    <label class="choice-radio-label">
-            <input class="choice-radio-button" type="radio" value="red" id="red" name="choice" checked="checked">
-            Red
-        </label>
-
-        <label class="choice-radio-label">
-            <input class="choice-radio-button" type="radio" value="black" id="black" name="choice">
-            Black
-        </label>
-
-        <button id="spin">Spin wheel</button>
+<button id="spin">Spin wheel</button>
 
 <script type="text/javascript" src="/static/scripts/roulette.js"></script>
 </body>
