@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="/static/styles/roulette.css">
 </head>
 <body>
+<div id="menubar">
 {% include "menubar.html" %}
+</div>
 
 <div class="roulette">
     <img alt="Wheel" id="wheel_img" src="/static/images/roulette/roulette_wheel.svg">
@@ -15,7 +17,7 @@
 
 <div id="bet-div">
     <label for="bet" style="font-size: 18px">
-        Bet:
+        Bet Coins:
     </label>
     <div style="display: inline">
 
@@ -31,6 +33,9 @@
     </div>
 </div>
 
+<label for="bet-type" style="font-size: 18px">
+    Bet Type:
+</label>
 <select id="bet-type">
     <option value="number">Single Number</option>
     <option value="color">Color</option>

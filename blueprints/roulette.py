@@ -7,13 +7,6 @@ from helper_functions.stats import played_game
 
 roulette_blueprint = Blueprint('roulette', __name__)
 
-red = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-black = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 29, 31, 33, 35]
-green = [0]
-
-even = [i for i in range(0, 37) if i % 2 == 0]
-odd = [i for i in range(0, 37) if i % 2 != 0]
-
 
 @roulette_blueprint.route('/')
 def roulette_home():
@@ -40,12 +33,18 @@ def spin():
         elif content['choice'] is None:
             return "invalid choice"
         elif content['type'] == "evenodd":
-            if content['choice'] == "even" and result in even or content['choice'] == "odd" and result in odd:
+            even = content['choice'] == "even" and result % 2 == 0
+            odd = content['choice'] == "odd" and result % 2 == 1
+            if (even or odd) and result != 0:
                 bet_value = int(content['bet'])
             else:
                 bet_value = -int(content['bet'])
         elif content['type'] == "color":
-            if content['choice'] == "red" and result in red or content['choice'] == "black" and result in black:
+            red = [1, 2, 3, 4, 5, 7, 9, 12, 14, 15, 16, 17, 18, 23, 27, 30, 36, 37]
+            black = [6, 8, 10, 11, 13, 19, 20, 21, 22, 24, 25, 26, 28, 29, 31, 32, 33, 34, 35]
+            b_red = content['choice'] == "red" and result in red
+            b_black = content['choice'] == "black" and result in black
+            if b_red or b_black:
                 bet_value = int(content['bet'])
             else:
                 bet_value = -int(content['bet'])

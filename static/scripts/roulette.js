@@ -2,8 +2,7 @@ let spinButton = document.getElementById("spin");
 let wheel = document.getElementById("wheel_img");
 let ball = document.getElementById("ball_img");
 
-const numberToPositionIndex = [0, 26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 37, 34, 17, 25, 2, 21, 4, 19, 15, 32]
-
+const numberToPositionIndex = [0, 14, 32,  2, 34, 18, 27,  6, 21, 10, 19, 23,  4, 25, 12, 36, 16, 30,  8, 35, 13, 33,  9, 20, 17, 31,  1, 26,  5,  7, 22, 11, 37, 15, 29,  3, 24, 28]
 let choice = "red"
 
 async function spin() {
@@ -29,9 +28,9 @@ async function spin() {
         }).then(response => response.text());
 
         Promise.all([fetchPromise, timeoutPromise]).then(async (values) => {
-            const positionIndex = parseInt(values[0]);
-            const result = numberToPositionIndex[positionIndex];
-            const targetDeg = result * 9.473684210526316;
+            const result = parseInt(values[0]);
+            const positionIndex = numberToPositionIndex[result];
+            const targetDeg = positionIndex * 9.473684210526316;
             wheel.style.setProperty("--target-deg", `${targetDeg + (2 * 360)}deg`);
             wheel.removeEventListener("animationend", restartSpinningWait);
             wheel.addEventListener("animationend", function () {
@@ -39,11 +38,11 @@ async function spin() {
                 void wheel.offsetWidth;
                 wheel.classList.add("spinning");
                 wheel.addEventListener("animationend", function () {
-                    wheel.style.transform = `rotate(${result * 9.473684210526316}deg)`;
+                    updateUserdata();
+                    wheel.style.transform = `rotate(${targetDeg}deg)`;
                     wheel.classList.remove("spinning");
                     wheel.style.setProperty("--start-deg", `${targetDeg}deg`);
                     wheel.style.setProperty("--target-wait-deg", `${targetDeg + 360}deg`);
-                    updateUserdata();
                     spinButton.disabled = false;
                 }, {once: true});
             }, {once: true});
