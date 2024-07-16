@@ -117,3 +117,16 @@ root {
 .spinning {
     animation: spin 5s ease-out forwards;
 }
+
+@keyframes spin_wait {
+    from {
+        transform: rotate(var(--start-deg));
+    }
+    to {
+        transform: rotate(var(--target-wait-deg));
+    }
+}
+
+.spinning_wait {
+    animation: spin_wait 1.33s linear forwards;
+}

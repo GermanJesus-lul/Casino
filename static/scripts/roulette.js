@@ -8,39 +8,56 @@ let choice = "red"
 
 async function spin() {
     spinButton.disabled = true;
-    wheel.style.setProperty("--start-deg", "0deg");
-    wheel.style.setProperty("--target-wait-deg", "360deg");
-    const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2000));
-    const fetchPromise = fetch("/roulette/spin", {
-        method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            "bet": document.getElementById("bet").value,
-            "type": document.getElementById("bet-type").value,
-            "choice": document.querySelector('input[name="choice"]:checked') ? document.querySelector('input[name="choice"]:checked').value : null,
-            "number": document.getElementById("number") ? document.getElementById("number").value : null
-        })
-        // "choice": choice
-    }).then(response => response.text());
+    updateUserdata();
+    if (document.getElementById("balance").innerText < document.getElementById("bet").value) {
+        alert("You don't have enough balance to make this bet.");
+        spinButton.disabled = false;
+    } else {
+        wheel.classList.add("spinning_wait");
+        wheel.addEventListener("animationend", restartSpinningWait);
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2000));
+        const fetchPromise = fetch("/roulette/spin", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                "bet": document.getElementById("bet").value,
+                "type": document.getElementById("bet-type").value,
+                "choice": document.querySelector('input[name="choice"]:checked') ? document.querySelector('input[name="choice"]:checked').value : null,
+                "number": document.getElementById("number") ? document.getElementById("number").value : null
+            })
+            // "choice": choice
+        }).then(response => response.text());
 
-    Promise.all([fetchPromise, timeoutPromise]).then(async (values) => {
-        const positionIndex = parseInt(values[0]);
-        const result = numberToPositionIndex[positionIndex];
-        const targetDeg = result * 9.473684210526316;
-        wheel.style.setProperty("--target-deg", `${targetDeg + (3 * 360)}deg`);
-        wheel.classList.add("spinning");
-        wheel.addEventListener("animationend", function () {
-            wheel.style.transform = `rotate(${result * 9.473684210526316}deg)`;
-            wheel.classList.remove("spinning");
-            wheel.style.setProperty("--start-deg", `${targetDeg}deg`);
-            wheel.style.setProperty("--target-wait-deg", `${targetDeg + 360}deg`);
-            updateUserdata();
-            spinButton.disabled = false;
-        }, {once: true});
-    });
+        Promise.all([fetchPromise, timeoutPromise]).then(async (values) => {
+            const positionIndex = parseInt(values[0]);
+            const result = numberToPositionIndex[positionIndex];
+            const targetDeg = result * 9.473684210526316;
+            wheel.style.setProperty("--target-deg", `${targetDeg + (2 * 360)}deg`);
+            wheel.removeEventListener("animationend", restartSpinningWait);
+            wheel.addEventListener("animationend", function () {
+                wheel.classList.remove("spinning_wait");
+                void wheel.offsetWidth;
+                wheel.classList.add("spinning");
+                wheel.addEventListener("animationend", function () {
+                    wheel.style.transform = `rotate(${result * 9.473684210526316}deg)`;
+                    wheel.classList.remove("spinning");
+                    wheel.style.setProperty("--start-deg", `${targetDeg}deg`);
+                    wheel.style.setProperty("--target-wait-deg", `${targetDeg + 360}deg`);
+                    updateUserdata();
+                    spinButton.disabled = false;
+                }, {once: true});
+            }, {once: true});
+        });
+    }
 }
 
 spinButton.addEventListener('click', spin);
+
+function restartSpinningWait() {
+    wheel.classList.remove("spinning_wait");
+    void wheel.offsetWidth;
+    wheel.classList.add("spinning_wait");
+}
 
 function updateInputContainer() {
     var selectedType = document.getElementById('bet-type').value;
@@ -77,5 +94,9 @@ function updateInputContainer() {
 }
 
 document.addEventListener('DOMContentLoaded', updateInputContainer);
+document.addEventListener('DOMContentLoaded', function () {
+    wheel.style.setProperty("--start-deg", "0deg");
+    wheel.style.setProperty("--target-wait-deg", "360deg");
+})
 
 document.getElementById('bet-type').addEventListener('change', updateInputContainer);
