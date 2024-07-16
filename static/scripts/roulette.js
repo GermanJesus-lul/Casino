@@ -1,15 +1,16 @@
 let spinButton = document.getElementById("spin");
 let wheel = document.getElementById("wheel_img");
-let ball = document.getElementById("ball_img");
 
-const numberToPositionIndex = [0, 14, 32,  2, 34, 18, 27,  6, 21, 10, 19, 23,  4, 25, 12, 36, 16, 30,  8, 35, 13, 33,  9, 20, 17, 31,  1, 26,  5,  7, 22, 11, 37, 15, 29,  3, 24, 28]
-let choice = "red"
+const numberToPositionIndex = [0, 14, 32, 2, 34, 18, 27, 6, 21, 10, 19, 23, 4, 25, 12, 36, 16, 30, 8, 35, 13, 33, 9, 20, 17, 31, 1, 26, 5, 7, 22, 11, 37, 15, 29, 3, 24, 28]
 
 async function spin() {
     spinButton.disabled = true;
     updateUserdata();
-    if (document.getElementById("balance").innerText < document.getElementById("bet").value) {
+    if (parseInt(document.getElementById("balance").innerText) < parseInt(document.getElementById("bet").value)){
         alert("You don't have enough balance to make this bet.");
+        spinButton.disabled = false;
+    } else if (document.getElementById("bet").value < 1) {
+        alert("Bet must be greater than 0.");
         spinButton.disabled = false;
     } else {
         wheel.classList.add("spinning_wait");
@@ -59,10 +60,10 @@ function restartSpinningWait() {
 }
 
 function updateInputContainer() {
-    var selectedType = document.getElementById('bet-type').value;
-    var inputContainer = document.getElementById('input-container');
+    const selectedType = document.getElementById('bet-type').value;
+    const inputContainer = document.getElementById('input-container');
 
-    inputContainer.innerHTML = ''; // Vorherige Eingaben löschen
+    inputContainer.innerHTML = '';
 
     if (selectedType === 'color') {
         inputContainer.innerHTML = `

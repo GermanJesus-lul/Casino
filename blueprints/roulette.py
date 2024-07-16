@@ -21,7 +21,9 @@ def spin():
     user_id = userid_from_token(request.cookies.get('token'))
     user_data = userdata_from_id(user_id)
 
-    if int(user_data['balance']) >= int(content['bet']):
+    if int(content['bet']) < 1:
+        return "invalid bet"
+    elif int(user_data['balance']) >= int(content['bet']):
         result = random.randint(0, 37)
         if content['type'] == "number":
             if int(content['number']) is None:
