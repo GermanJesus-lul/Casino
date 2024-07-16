@@ -21,6 +21,7 @@ app.register_blueprint(account_blueprint)
 app.register_blueprint(coinflip_blueprint, url_prefix='/coinflip')
 app.register_blueprint(roulette_blueprint, url_prefix='/roulette')
 
+
 @app.before_request
 def before_request():
     # force https

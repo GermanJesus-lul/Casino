@@ -5,17 +5,34 @@ from flask import Blueprint, request, render_template
 from helper_functions.user_administration import userid_from_token, userdata_from_id, update_balance
 from helper_functions.stats import played_game
 
+# Initialize a Flask Blueprint for the roulette game.
 roulette_blueprint = Blueprint('roulette', __name__)
 
 
 @roulette_blueprint.route('/')
 def roulette_home():
+    """
+    Route to serve the roulette game's homepage.
+
+    Returns:
+        Rendered template for the roulette game homepage.
+    """
     if request.method == "GET":
         return render_template("roulette/roulette.html")
 
 
 @roulette_blueprint.route('/spin', methods=["POST"])
 def spin():
+    """
+    Route to handle a spin request in the roulette game.
+
+    Processes the user's bet and choice, calculates the result of the spin,
+    updates the user's balance based on the result, and records the game play.
+
+    Returns:
+        A string indicating the spin result, or an error message if the bet is invalid,
+        the choice is invalid, or the user does not have enough money.
+    """
     content = request.json
 
     user_id = userid_from_token(request.cookies.get('token'))
