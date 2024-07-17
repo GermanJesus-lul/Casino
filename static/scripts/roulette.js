@@ -79,7 +79,13 @@ function restartSpinningWait() {
 
 /**
  * Updates the input container based on the selected bet type.
- * Dynamically changes the input fields to match the bet type (color, even/odd, number).
+ * This function dynamically changes the input fields to match the bet type selected by the user.
+ * It supports three bet types: color, even/odd, and number. Based on the selection,
+ * it displays the relevant input fields and hides the others.
+ *
+ * For the 'color' bet type, it checks the 'red' radio button by default and clears the number input.
+ * For the 'evenodd' bet type, it checks the 'even' radio button by default and clears the number input.
+ * For the 'number' bet type, it sets the number input's value to 10 and unchecks all choice radio buttons.
  */
 function updateInputContainer() {
     const selectedType = document.getElementById('bet-type').value;
@@ -87,12 +93,12 @@ function updateInputContainer() {
     const evenOddInputs = document.getElementById('evenOddInputs');
     const numberInput = document.getElementById('numberInput');
 
-    // Zuerst alle Elemente verstecken
+    // Initially hide all elements
     colorInputs.style.display = 'none';
     evenOddInputs.style.display = 'none';
     numberInput.style.display = 'none';
 
-    // Dann das entsprechende Element basierend auf der Auswahl anzeigen
+    // Display the appropriate element based on the selected bet type
     if (selectedType === 'color') {
         document.getElementById('red').checked = true;
         colorInputs.style.display = 'block';
