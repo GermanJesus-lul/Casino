@@ -1,13 +1,68 @@
+/* Main body styling to ensure a consistent font and alignment across the roulette game interface. */
 body {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
+/* Styling for the roulette wheel and ball container, ensuring they are centered. */
+.roulette {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* Styling for the roulette wheel image, setting its size relative to its container. */
 #wheel_img {
+    position: relative;
     width: 35%;
     height: 35%;
 }
 
+/* Styling for the roulette ball image, positioning it over the wheel. */
+#ball_img {
+    position: absolute;
+    top: 27%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 7%;
+}
+
+/* Styling for various elements to ensure they are layered correctly and visually consistent. */
+#menubar, #input-container, #bet-type, #bet-div, #spin {
+    position: relative;
+    z-index: 2;
+}
+
+/* Custom styling for the bet type selection dropdown to match the game's theme. */
+#bet-type {
+    font-size: 18px;
+    border: 2px solid #8FB8DE;
+    border-radius: 5px;
+    background-color: #8FB8DE;
+    padding-right: 15px;
+    padding-left: 5px;
+    width: fit-content;
+    cursor: pointer;
+    outline: none;
+    margin-right: 5%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('/static/images/roulette/dropdown_arrow.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 12px;
+}
+/* Styling for the input container to ensure it is visually consistent and well-spaced. */
+#input-container {
+    margin: 1%;
+}
+
+/* Styling for the spin button to match the game's theme and indicate interactivity. */
 #spin {
     color: black;
     background-color: #8FB8DE;
@@ -17,22 +72,27 @@ body {
     width: fit-content;
 }
 
-#bet {
+/* Styling for the bet and number input fields to match the game's theme and improve usability. */
+#bet, #number {
     border: none;
     border-bottom: 2px solid #8FB8DE;
-    text-align:center;
+    text-align: center;
     font-size: 18px;
     width: fit-content;
 }
 
+/* Removes the default spin buttons from number input fields in WebKit browsers. */
 #bet::-webkit-outer-spin-button,
-#bet::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  margin: 0;
+#bet::-webkit-inner-spin-button,
+#number::-webkit-outer-spin-button,
+#number::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
 }
 
+/* Styles for the buttons used to increase or decrease the input number values. */
 .input-number-button {
     color: black;
     background-color: #8FB8DE;
@@ -41,29 +101,56 @@ body {
     font-size: 18px;
 }
 
+/* Styles for the div that contains the betting amount input section. */
 #bet-div {
     margin: 1%;
 }
 
+/* Styles for the labels of the choice radio buttons (e.g., Red, Black, Even, Odd). */
 .choice-radio-label {
     font-size: 18px;
 }
 
+/* Styles for the choice radio buttons and the spin button when hovered over. */
 .choice-radio-button,
 #spin:hover,
 .input-number-button:hover {
     cursor: pointer;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(540deg);
-  }
+/* Custom properties (CSS variables) for controlling the start, target, and waiting target degrees of the roulette wheel animation. */
+root {
+    --start-deg: 0deg;
+    --target-deg: 0deg;
+    --target-wait-deg: 360deg;
 }
 
+/* Keyframes for the spin animation, defining the start and end states of the rotation. */
+@keyframes spin {
+    from {
+        transform: rotate(var(--start-deg));
+    }
+    to {
+        transform: rotate(var(--target-deg));
+    }
+}
+
+/* Applies the spin animation to elements with the .spinning class. */
 .spinning {
-  animation: spin 1s linear infinite;
+    animation: spin 5s ease-out forwards;
+}
+
+/* Keyframes for the waiting spin animation, defining the start and end states of the rotation. */
+@keyframes spin_wait {
+    from {
+        transform: rotate(var(--start-deg));
+    }
+    to {
+        transform: rotate(var(--target-wait-deg));
+    }
+}
+
+/* Applies the waiting spin animation to elements with the .spinning_wait class. */
+.spinning_wait {
+    animation: spin_wait 1.33s linear forwards;
 }
