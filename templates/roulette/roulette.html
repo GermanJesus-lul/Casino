@@ -48,8 +48,40 @@
     <option value="evenodd">Even/Odd</option>
 </select>
 
-<!-- Container for dynamically changing input fields based on selected bet type -->
-<div id="input-container"></div>
+<!-- Container for the bet type input -->
+<div id="input-container">
+    <!-- Container for color bet type -->
+    <div id="colorInputs" style="display: none;">
+        <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="red" id="red"
+                                                 name="choice"
+        > Red</label>
+        <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="black" id="black"
+                                                 name="choice"> Black</label>
+    </div>
+
+    <!-- Container for even/odd bet type -->
+    <div id="evenOddInputs" style="display: none;">
+        <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="even" id="even"
+                                                 name="choice"> Even</label>
+        <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="odd" id="odd"
+                                                 name="choice"> Odd</label>
+    </div>
+
+    <!-- Container for number bet type -->
+    <div id="numberInput" style="display: none;">
+        <div style="display: inline">
+            <button type="button" class="input-number-button"
+                    onclick="this.parentNode.querySelector('[type=number]').stepDown();">
+                -
+            </button>
+            <input id="number" type="number" min="0" max="36" step="1" value="0"/>
+            <button type="button" class="input-number-button"
+                    onclick="this.parentNode.querySelector('[type=number]').stepUp();">
+                +
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- Button to initiate the roulette wheel spin -->
 <button id="spin">Spin wheel</button>

@@ -30,8 +30,8 @@ async function spin() {
             body: JSON.stringify({
                 "bet": document.getElementById("bet").value,
                 "type": document.getElementById("bet-type").value,
-                "choice": document.querySelector('input[name="choice"]:checked') ? document.querySelector('input[name="choice"]:checked').value : null,
-                "number": document.getElementById("number") ? document.getElementById("number").value : null
+                "choice": document.querySelector('input[name="choice"]:not([style*="display: none"]):checked') ? document.querySelector('input[name="choice"]:checked').value : null,
+                "number": document.getElementById("number").style.display !== "none" ? document.getElementById("number").value : null
             })
             // "choice": choice
         }).then(response => response.text());
@@ -83,35 +83,30 @@ function restartSpinningWait() {
  */
 function updateInputContainer() {
     const selectedType = document.getElementById('bet-type').value;
-    const inputContainer = document.getElementById('input-container');
+    const colorInputs = document.getElementById('colorInputs');
+    const evenOddInputs = document.getElementById('evenOddInputs');
+    const numberInput = document.getElementById('numberInput');
 
-    inputContainer.innerHTML = '';
+    // Zuerst alle Elemente verstecken
+    colorInputs.style.display = 'none';
+    evenOddInputs.style.display = 'none';
+    numberInput.style.display = 'none';
 
+    // Dann das entsprechende Element basierend auf der Auswahl anzeigen
     if (selectedType === 'color') {
-        inputContainer.innerHTML = `
-            <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="red" id="red" name="choice" checked="checked"> Red</label>
-            <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="black" id="black" name="choice"> Black</label>
-        `;
+        document.getElementById('red').checked = true;
+        colorInputs.style.display = 'block';
+        document.getElementById('number').value = null;
     } else if (selectedType === 'evenodd') {
-        inputContainer.innerHTML = `
-            <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="even" id="even" name="choice" checked="checked"> Even</label>
-            <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="odd" id="odd" name="choice"> Odd</label>
-        `;
+        document.getElementById('even').checked = true;
+        evenOddInputs.style.display = 'block';
+        document.getElementById('number').value = null;
     } else if (selectedType === 'number') {
-
-        inputContainer.innerHTML = `
-            <div style="display: inline">
-                <button type="button" class="input-number-button"
-                        onclick="this.parentNode.querySelector('[type=number]').stepDown();">
-                    -
-                </button>
-                <input id="number" type="number" min="0" max="36" step="1" value="0"/>
-                <button type="button" class="input-number-button"
-                        onclick="this.parentNode.querySelector('[type=number]').stepUp();">
-                    +
-                </button>
-            </div>
-        `;
+        document.getElementById('number').value = 10;
+        numberInput.style.display = 'block';
+        Array.from(document.getElementsByClassName('choice-radio-button')).forEach(radio => {
+            radio.checked = false;
+        })
     }
 }
 
