@@ -1,7 +1,13 @@
-from helper_functions.sqlClass import SQL
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 import secrets
+
+import config
+
+if config.local():
+    from helper_functions.sqliteClass import SQL
+else:
+    from helper_functions.mysqlClass import SQL
 
 ph = PasswordHasher()
 
