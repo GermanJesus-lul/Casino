@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, session, jsonify
 
 from helper_functions.user_administration import userid_from_token
 
@@ -17,6 +17,7 @@ app.register_blueprint(autodeployment_blueprint)
 app.register_blueprint(home_blueprint)
 app.register_blueprint(user_administration_blueprint)
 app.register_blueprint(account_blueprint)
+app.secret_key = 'topsecret'
 
 # games
 app.register_blueprint(coinflip_blueprint, url_prefix='/coinflip')
@@ -48,4 +49,4 @@ def before_request():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
