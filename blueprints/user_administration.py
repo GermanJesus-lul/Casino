@@ -15,10 +15,10 @@ def login():
                 resp = make_response(redirect('/account'))
                 resp.set_cookie('token', token)
                 return resp
-        return render_template("errorpage.html", error="Log in failed", redirect="/login")
+        return render_template("user_administration/errorpage.html", error="Log in failed", redirect="/login")
 
     elif request.method == "GET":
-        return render_template("login.html")
+        return render_template("user_administration/login.html")
 
 
 @user_administration_blueprint.route("/register", methods=["GET", "POST"])
@@ -27,7 +27,7 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         if user_exists(username):
-            return render_template("errorpage.html", error="Username already exists", redirect="/register")
+            return render_template("user_administration/errorpage.html", error="Username already exists", redirect="/register")
         else:
             register_user(username, password)
             token = create_token(username)
@@ -36,7 +36,7 @@ def register():
             return resp
 
     elif request.method == "GET":
-        return render_template("register.html")
+        return render_template("user_administration/register.html")
 
 
 @user_administration_blueprint.route("/userdata", methods=["GET"])

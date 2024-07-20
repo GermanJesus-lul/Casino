@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Roulette</title>
+    <link rel="stylesheet" href="/static/styles/roulette.css">
+</head>
+<body>
+<!-- Menu bar included from another HTML file for consistent navigation -->
+<div id="menubar">
+    {% include "menubar.html" %}
+</div>
+
+<!-- Main roulette game container -->
+<div class="roulette">
+    <img alt="Wheel" id="wheel_img" src="/static/images/roulette/roulette_wheel.svg">
+    <img alt="Ball" id="ball_img" src="/static/images/roulette/roulette_ball.png">
+</div>
+
+<!-- Betting amount input section -->
+<div id="bet-div">
+    <label for="bet" style="font-size: 18px">
+        Bet Coins:
+    </label>
+    <div style="display: inline">
+        <!-- Decrease bet amount button -->
+        <button type="button" class="input-number-button"
+                onclick="this.parentNode.querySelector('[type=number]').stepDown();">
+            -
+        </button>
+        <!-- Input field for bet amount -->
+        <input id="bet" type="number" value="10"/>
+        <!-- Increase bet amount button -->
+        <button type="button" class="input-number-button"
+                onclick="this.parentNode.querySelector('[type=number]').stepUp();">
+            +
+        </button>
+    </div>
+</div>
+
+<!-- Betting type selection dropdown -->
+<label for="bet-type" style="font-size: 18px">
+    Bet Type:
+</label>
+<select id="bet-type">
+    <option value="number">Single Number</option>
+    <option value="color">Color</option>
+    <option value="evenodd">Even/Odd</option>
+</select>
+
+<!-- Container for the bet type input -->
+<div id="input-container">
+    <!-- Container for color bet type -->
+    <div id="colorInputs" style="display: none;">
+        <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="red" id="red"
+                                                 name="choice"
+        > Red</label>
+        <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="black" id="black"
+                                                 name="choice"> Black</label>
+    </div>
+
+    <!-- Container for even/odd bet type -->
+    <div id="evenOddInputs" style="display: none;">
+        <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="even" id="even"
+                                                 name="choice"> Even</label>
+        <label class="choice-radio-label"><input class="choice-radio-button" type="radio" value="odd" id="odd"
+                                                 name="choice"> Odd</label>
+    </div>
+
+    <!-- Container for number bet type -->
+    <div id="numberInput" style="display: none;">
+        <div style="display: inline">
+            <button type="button" class="input-number-button"
+                    onclick="this.parentNode.querySelector('[type=number]').stepDown();">
+                -
+            </button>
+            <input id="number" type="number" min="0" max="36" step="1" value="0"/>
+            <button type="button" class="input-number-button"
+                    onclick="this.parentNode.querySelector('[type=number]').stepUp();">
+                +
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Button to initiate the roulette wheel spin -->
+<button id="spin">Spin wheel</button>
+
+<script type="text/javascript" src="/static/scripts/roulette.js"></script>
+</body>
+</html>
