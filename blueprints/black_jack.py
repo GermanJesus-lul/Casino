@@ -108,16 +108,6 @@ def hit():
 
 @black_jack_blueprint.route('/stay', methods=["POST"])
 def stay():
-    data = request.json
-    dealer_sum = data['dealer_sum']
-    dealer_ace_count = data['dealer_ace_count']
-    dealer_cards = data['dealer_cards']
-
-    while dealer_sum < 17:
-        card = deck.pop()
-        dealer_sum += get_value(card)
-        dealer_ace_count += check_ace(card)
-        dealer_sum = reduce_ace(dealer_sum, dealer_ace_count)
-        dealer_cards.append(card)
-
-    return jsonify({"dealer_sum": dealer_sum, "dealer_cards": dealer_cards})
+    global canHit
+    canHit = False
+    return jsonify({"message": "stay", "dealerSum": dealerSum, "playerSum": playerSum, "hiddenCard": hiddenCard,"canHit": canHit, "cardsDealer": cardsDealer, "cardsPlayer": cardsPlayer})
