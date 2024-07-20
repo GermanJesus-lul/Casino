@@ -92,7 +92,7 @@ def play():
     user_data = userdata_from_id(user_id)
 
 
-@black_jack_blueprint.route('/hit', methods=["POST"])
+@black_jack_blueprint.route('/hit', methods=["GET"])
 def hit():
     global playerSum, playerAceCount, canHit, cardsPlayer
     if canHit:
@@ -106,7 +106,7 @@ def hit():
     return jsonify({"message": "hit", "dealerSum": dealerSum, "playerSum": playerSum, "hiddenCard": hiddenCard, "canHit": canHit, "cardsDealer": cardsDealer, "cardsPlayer": cardsPlayer})
 
 
-@black_jack_blueprint.route('/stay', methods=["POST"])
+@black_jack_blueprint.route('/stay', methods=["GET"])
 def stay():
     global canHit
     canHit = False
