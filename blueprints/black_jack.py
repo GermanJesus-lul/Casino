@@ -7,15 +7,54 @@ from helper_functions.user_administration import userid_from_token, userdata_fro
 black_jack_blueprint = Blueprint('black_jack', __name__)
 
 
+@black_jack_blueprint.route('/start', methods=["GET"])
+def start():
+    build_deck()
+    shuffle_deck()
+    start_game()
+    return jsonify({"message": "Game started", "dealerSum": dealerSum, "playerSum": playerSum, "hiddenCard": hiddenCard, "canHit": canHit, "cardsDealer": cardsDealer, "cardsPlayer": cardsPlayer})
+
+
+dealerSum = 0
+playerSum = 0
+dealerAceCount = 0
+playerAceCount = 0
+hiddenCard = ""
 deck = []
-values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king']
-types = ['clubs', 'diamonds', 'hearts', 'spades']
+canHit = True
+cardsDealer = []
+cardsPlayer = []
 
 
 def build_deck():
     global deck
+    values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king']
+    types = ['clubs', 'diamonds', 'hearts', 'spades']
     deck = [f"{t}_{v}" for t in types for v in values]
+
+
+def shuffle_deck():
+    global deck
     random.shuffle(deck)
+
+
+def start_game():
+    global hiddenCard, dealerSum, dealerAceCount, cardsDealer, playerSum, playerAceCount, cardsPlayer
+    hiddenCard = deck.pop()
+    dealerSum += get_value(hiddenCard)
+    dealerAceCount += check_ace(hiddenCard)
+    while dealerSum < 17:
+        card = deck.pop()
+        dealerSum += get_value(card)
+        dealerAceCount += check_ace(card)
+        dealerSum = reduce_ace(dealerSum, dealerAceCount)
+        cardsDealer.append(card)
+    for i in range(2):
+        card = deck.pop()
+        playerSum += get_value(card)
+        playerAceCount += check_ace(card)
+        playerSum = reduce_ace(playerSum, playerAceCount)
+        cardsPlayer.append(card)
 
 
 def get_value(card):
