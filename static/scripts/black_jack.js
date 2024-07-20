@@ -28,8 +28,8 @@ window.onload = function() {
 
             data.player_cards.forEach(card => {
                 let cardImg = document.createElement("img");
-                cardImg.src = `/static/images/card_deck_black_jack/${data.card}.svg`;
-                document.getElementById("playerCards").append(cardImg);
+                cardImg.src = `/static/images/card_deck_black_jack/${card}.svg`;
+                document.getElementById("cardsPlayer").append(cardImg);
 
             });
 
@@ -61,7 +61,7 @@ function hit() {
 
             if (yourSum > 21) {
                 canHit = false;
-                document.getElementById('results').innerText = "You lose!";
+                document.getElementById('result').innerText = "You lose!";
             }
         });
 
@@ -80,12 +80,12 @@ function stay() {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById('hiddenCard').src = `/static/images/cards/${hidden}.svg`;
+        document.getElementById('hiddenCard').src = `/static/images/card_deck_black_jack/${hidden}.svg`;
 
         data.dealer_cards.forEach((card, index) => {
             if (index > 0) {
                 let cardImg = document.createElement('img');
-                cardImg.src = `/static/images/cards/${card}.svg`;
+                cardImg.src = `/static/images/card_deck_black_jack/${card}.svg`;
                 document.getElementById('cardsDealer').append(cardImg);
             }
         });
@@ -105,7 +105,7 @@ function stay() {
         } else {
             message = "It's a tie!";
         }
-        document.getElementById('results').innerText = message;
+        document.getElementById('result').innerText = message;
     });
 }
 
