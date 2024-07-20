@@ -24,7 +24,7 @@ deck = []
 canHit = True
 cardsDealer = []
 cardsPlayer = []
-
+canStart = True
 
 def build_deck():
     global deck
@@ -94,13 +94,16 @@ def play():
 
 @black_jack_blueprint.route('/hit', methods=["POST"])
 def hit():
-    global deck
-    if not deck:
-        build_deck()
-    card = deck.pop()
-    card_value = get_value(card)
-    card_ace = check_ace(card)
-    return jsonify({"card": card, "value": card_value, "ace": card_ace})
+    global playerSum, playerAceCount, canHit, cardsPlayer
+    if canHit:
+        card = deck.pop()
+        playerSum += get_value(card)
+        playerAceCount += check_ace(card)
+        playerSum = reduce_ace(playerSum, playerAceCount)
+        cardsPlayer.append(card)
+        if playerSum > 21:
+            canHit = False
+    return jsonify({"message": "hit", "dealerSum": dealerSum, "playerSum": playerSum, "hiddenCard": hiddenCard, "canHit": canHit, "cardsDealer": cardsDealer, "cardsPlayer": cardsPlayer})
 
 
 @black_jack_blueprint.route('/stay', methods=["POST"])
