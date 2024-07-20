@@ -1,82 +1,21 @@
+import json
 import random
 
-from flask import Blueprint, request, render_template, jsonify
+from flask import Blueprint, request, render_template, jsonify, session
 
-from helper_functions.user_administration import userid_from_token, userdata_from_id, update_balance
-from helper_functions.stats import played_game
+from helper_functions.user_administration import userid_from_token, userdata_from_id
 
 black_jack_blueprint = Blueprint('black_jack', __name__)
 
 
 @black_jack_blueprint.route('/start', methods=["GET"])
 def start():
-    build_deck()
-    shuffle_deck()
-    start_game()
-    return jsonify({"message": "Game started", "dealerSum": dealerSum, "playerSum": playerSum, "hiddenCard": hiddenCard, "canHit": canHit, "cardsDealer": cardsDealer, "cardsPlayer": cardsPlayer})
-
-
-dealerSum = 0
-playerSum = 0
-dealerAceCount = 0
-playerAceCount = 0
-hiddenCard = ""
-deck = []
-canHit = True
-cardsDealer = []
-cardsPlayer = []
-canStart = True
-
-def build_deck():
-    global deck
-    values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king']
-    types = ['clubs', 'diamonds', 'hearts', 'spades']
-    deck = [f"{t}_{v}" for t in types for v in values]
-
-
-def shuffle_deck():
-    global deck
-    random.shuffle(deck)
-
-
-def start_game():
-    global hiddenCard, dealerSum, dealerAceCount, cardsDealer, playerSum, playerAceCount, cardsPlayer
-    hiddenCard = deck.pop()
-    dealerSum += get_value(hiddenCard)
-    dealerAceCount += check_ace(hiddenCard)
-    while dealerSum < 17:
-        card = deck.pop()
-        dealerSum += get_value(card)
-        dealerAceCount += check_ace(card)
-        dealerSum = reduce_ace(dealerSum, dealerAceCount)
-        cardsDealer.append(card)
-    for i in range(2):
-        card = deck.pop()
-        playerSum += get_value(card)
-        playerAceCount += check_ace(card)
-        playerSum = reduce_ace(playerSum, playerAceCount)
-        cardsPlayer.append(card)
-
-
-def get_value(card):
-    value = card.split('_')[1]
-    if value == 'ace':
-        return 11
-    elif value in ['jack', 'queen', 'king']:
-        return 10
-    else:
-        return int(value)
-
-
-def check_ace(card):
-    return 1 if card.split('_')[1] == 'ace' else 0
-
-
-def reduce_ace(player_sum, player_ace_count):
-    while player_sum > 21 and player_ace_count > 0:
-        player_sum -= 10
-        player_ace_count -= 1
-    return player_sum
+    game = BlackJack()
+    game.build_deck()
+    game.shuffle_deck()
+    start_response = game.start_game()
+    save_current_game(game)
+    return jsonify(start_response)
 
 
 @black_jack_blueprint.route('/')
@@ -95,20 +34,135 @@ def play():
 
 @black_jack_blueprint.route('/hit', methods=["GET"])
 def hit():
-    global playerSum, playerAceCount, canHit, cardsPlayer
-    if canHit:
-        card = deck.pop()
-        playerSum += get_value(card)
-        playerAceCount += check_ace(card)
-        playerSum = reduce_ace(playerSum, playerAceCount)
-        cardsPlayer.append(card)
-        if playerSum > 21:
-            canHit = False
-    return jsonify({"message": "hit", "dealerSum": dealerSum, "playerSum": playerSum, "hiddenCard": hiddenCard, "canHit": canHit, "cardsDealer": cardsDealer, "cardsPlayer": cardsPlayer})
+    game = get_current_game()
+    hit_result = game.hit()
+    save_current_game(game)
+    return jsonify(hit_result)
 
 
 @black_jack_blueprint.route('/stay', methods=["GET"])
 def stay():
-    global canHit
-    canHit = False
-    return jsonify({"message": "stay", "dealerSum": dealerSum, "playerSum": playerSum, "hiddenCard": hiddenCard,"canHit": canHit, "cardsDealer": cardsDealer, "cardsPlayer": cardsPlayer})
+    game = get_current_game()
+    stay_result = game.stay()
+    return jsonify(stay_result)
+
+
+def get_current_game():
+    if 'game' in session:
+        game_data = json.loads(session['game'])
+        game = BlackJack()
+        game.from_dict(game_data)
+        return game
+    else:
+        return None
+
+
+def save_current_game(game):
+    session['game'] = json.dumps(game.to_dict())
+
+
+class BlackJack:
+    def __init__(self):
+        self.dealerSum = 0
+        self.playerSum = 0
+        self.dealerAceCount = 0
+        self.playerAceCount = 0
+        self.hiddenCard = ""
+        self.deck = []
+        self.canHit = True
+        self.cardsDealer = []
+        self.cardsPlayer = []
+        self.canStart = True
+
+    def to_dict(self):
+        return {
+            "dealerSum": self.dealerSum,
+            "playerSum": self.playerSum,
+            "dealerAceCount": self.dealerAceCount,
+            "playerAceCount": self.playerAceCount,
+            "hiddenCard": self.hiddenCard,
+            "deck": self.deck,
+            "canHit": self.canHit,
+            "cardsDealer": self.cardsDealer,
+            "cardsPlayer": self.cardsPlayer,
+            "canStart": self.canStart
+        }
+
+    def from_dict(self, data):
+        self.dealerSum = data['dealerSum']
+        self.playerSum = data['playerSum']
+        self.dealerAceCount = data['dealerAceCount']
+        self.playerAceCount = data['playerAceCount']
+        self.hiddenCard = data['hiddenCard']
+        self.deck = data['deck']
+        self.canHit = data['canHit']
+        self.cardsDealer = data['cardsDealer']
+        self.cardsPlayer = data['cardsPlayer']
+        self.canStart = data['canStart']
+
+    def build_deck(self):
+        values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king']
+        types = ['clubs', 'diamonds', 'hearts', 'spades']
+        self.deck = [f"{t}_{v}" for t in types for v in values]
+
+    def shuffle_deck(self):
+        random.shuffle(self.deck)
+
+    def start_game(self):
+        print("start game")
+        self.hiddenCard = self.deck.pop()
+        self.dealerSum += self.get_value(self.hiddenCard)
+        self.dealerAceCount += self.check_ace(self.hiddenCard)
+        print(f"dealer initial hidden card: {self.hiddenCard}, dealer sum: {self.dealerSum}, dealer ace count: {self.dealerAceCount}")
+        while self.dealerSum < 17:
+            card = self.deck.pop()
+            self.dealerSum += self.get_value(card)
+            self.dealerAceCount += self.check_ace(card)
+            self.dealerSum = self.reduce_ace(self.dealerSum, self.dealerAceCount)
+            self.cardsDealer.append(card)
+            print(f"Dealer draws: {card}, Dealer Sum: {self.dealerSum}")
+        for i in range(2):
+            card = self.deck.pop()
+            self.playerSum += self.get_value(card)
+            self.playerAceCount += self.check_ace(card)
+            self.playerSum = self.reduce_ace(self.playerSum, self.playerAceCount)
+            self.cardsPlayer.append(card)
+            print(f"Player draws: {card}, Player Sum: {self.playerSum}")
+        return {"message": "start", "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
+
+    def get_value(self, card):
+        value = card.split('_')[1]
+        if value == 'ace':
+            return 11
+        elif value in ['jack', 'queen', 'king']:
+            return 10
+        else:
+            return int(value)
+
+    def check_ace(self, card):
+        return 1 if card.split('_')[1] == 'ace' else 0
+
+    def reduce_ace(self, sum, ace_count):
+        while sum > 21 and ace_count > 0:
+            sum -= 10
+            ace_count -= 1
+        return sum
+
+    def hit(self):
+        if self.canHit:
+            print("Player hits...")
+            card = self.deck.pop()
+            self.playerSum += self.get_value(card)
+            self.playerAceCount += self.check_ace(card)
+            self.playerSum = self.reduce_ace(self.playerSum, self.playerAceCount)
+            self.cardsPlayer.append(card)
+            print(f"Player draws: {card}, Player Sum: {self.playerSum}")
+            if self.playerSum > 21:
+                self.canHit = False
+                print("Player busts!")
+        return {"message": "hit", "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
+
+    def stay(self):
+        self.canHit = False
+        print(f"Player stays. Final Player Sum: {self.playerSum}, Dealer Sum: {self.dealerSum}")
+        return {"message": "stay", "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
