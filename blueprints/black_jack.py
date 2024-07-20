@@ -92,28 +92,6 @@ def play():
     user_data = userdata_from_id(user_id)
 
 
-@black_jack_blueprint.route('/deal', methods=["POST"])
-def deal():
-    build_deck()
-    player_cards = [deck.pop(), deck.pop()]
-    dealer_cards = [deck.pop(), deck.pop()]
-    player_sum = sum(get_value(card) for card in player_cards)
-    dealer_sum = sum(get_value(card) for card in dealer_cards)
-    player_ace_count = sum(check_ace(card) for card in player_cards)
-    dealer_ace_count = sum(check_ace(card) for card in dealer_cards)
-    player_sum = reduce_ace(player_sum, player_ace_count)
-    dealer_sum = reduce_ace(dealer_sum, dealer_ace_count)
-    response = {
-        "player_cards": player_cards,
-        "dealer_cards": [dealer_cards[0],"back"],
-        "player_sum": player_sum,
-        "dealer_sum": get_value(dealer_cards[0]),
-        "player_ace_count": player_ace_count,
-        "dealer_ace_count": dealer_ace_count
-    }
-    return jsonify(response)
-
-
 @black_jack_blueprint.route('/hit', methods=["POST"])
 def hit():
     global deck
