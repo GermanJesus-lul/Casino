@@ -149,6 +149,7 @@ class BlackJack:
         return sum, ace_count
 
     def hit(self):
+        message = "hit"
         if self.canHit:
             print("Player hits...")
             card = self.deck.pop()
@@ -159,10 +160,22 @@ class BlackJack:
             print(f"Player draws: {card}, Player Sum: {self.playerSum}")
             if self.playerSum > 21:
                 self.canHit = False
+                message = "Player busts!"
                 print("Player busts!")
-        return {"message": "hit", "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
+
+        return {"message": message, "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
 
     def stay(self):
         self.canHit = False
         print(f"Player stays. Final Player Sum: {self.playerSum}, Dealer Sum: {self.dealerSum}")
-        return {"message": "stay", "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
+        if self.playerSum > 21:
+            message = "Player busts!"
+        elif self.dealerSum > 21:
+            message = "Dealer busts!"
+        elif self.playerSum > self.dealerSum:
+            message = "Player wins!"
+        elif self.playerSum < self.dealerSum:
+            message = "Dealer wins!"
+        else:
+            message = "Tie!"
+        return {"message": message, "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}

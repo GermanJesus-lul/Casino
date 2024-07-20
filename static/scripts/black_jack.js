@@ -37,7 +37,6 @@ function updateGameState(gameState) {
     // Update dealer and player sums
     document.getElementById("sumDealer").textContent = gameState.dealerSum;
     document.getElementById("sumPlayer").textContent = gameState.playerSum;
-
     // Update the cards displayed for the dealer, clear existing cards first (except the hidden card)
     const dealerCardsContainer = document.getElementById("cardsDealer");
     while (dealerCardsContainer.children.length > 1) { // Keep the hidden card
@@ -63,5 +62,5 @@ function updateGameState(gameState) {
     });
 
     // Clear any previous result
-    document.getElementById("result").textContent = "";
+    document.getElementById("result").textContent = gameState.message;
 }
