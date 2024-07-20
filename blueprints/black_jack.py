@@ -118,14 +118,14 @@ class BlackJack:
             card = self.deck.pop()
             self.dealerSum += self.get_value(card)
             self.dealerAceCount += self.check_ace(card)
-            self.dealerSum = self.reduce_ace(self.dealerSum, self.dealerAceCount)
+            self.dealerSum, self.dealerAceCount = self.reduce_ace(self.dealerSum, self.dealerAceCount)
             self.cardsDealer.append(card)
             print(f"Dealer draws: {card}, Dealer Sum: {self.dealerSum}")
         for i in range(2):
             card = self.deck.pop()
             self.playerSum += self.get_value(card)
             self.playerAceCount += self.check_ace(card)
-            self.playerSum = self.reduce_ace(self.playerSum, self.playerAceCount)
+            self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
             self.cardsPlayer.append(card)
             print(f"Player draws: {card}, Player Sum: {self.playerSum}")
         return {"message": "start", "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
@@ -146,7 +146,7 @@ class BlackJack:
         while sum > 21 and ace_count > 0:
             sum -= 10
             ace_count -= 1
-        return sum
+        return sum, ace_count
 
     def hit(self):
         if self.canHit:
@@ -154,7 +154,7 @@ class BlackJack:
             card = self.deck.pop()
             self.playerSum += self.get_value(card)
             self.playerAceCount += self.check_ace(card)
-            self.playerSum = self.reduce_ace(self.playerSum, self.playerAceCount)
+            self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
             self.cardsPlayer.append(card)
             print(f"Player draws: {card}, Player Sum: {self.playerSum}")
             if self.playerSum > 21:
