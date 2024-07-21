@@ -39,8 +39,21 @@ function updateGameState(gameState) {
     document.getElementById("sumPlayer").textContent = gameState.playerSum;
     // Update the cards displayed for the dealer, clear existing cards first (except the hidden card)
     const dealerCardsContainer = document.getElementById("cardsDealer");
-    while (dealerCardsContainer.children.length > 1) { // Keep the hidden card
+    while (dealerCardsContainer.children.length > 0) { // Keep the hidden card
         dealerCardsContainer.removeChild(dealerCardsContainer.lastChild);
+    }
+    if (gameState.hiddenCard !== null){
+        const hiddenCardImg = document.createElement("img");
+        hiddenCardImg.src = `/static/images/card_deck_black_jack/${gameState.hiddenCard}.svg`;
+        hiddenCardImg.alt = gameState.hiddenCard;
+        dealerCardsContainer.appendChild(hiddenCardImg);
+    }
+    else {
+        const hiddenCardImg = document.createElement("img");
+        hiddenCardImg.src = `/static/images/card_deck_black_jack/back.svg`;
+        hiddenCardImg.alt = "back";
+        dealerCardsContainer.appendChild(hiddenCardImg);
+
     }
     gameState.cardsDealer.forEach(card => {
         const img = document.createElement("img");

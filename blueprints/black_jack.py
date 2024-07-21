@@ -14,6 +14,7 @@ def start():
     game.build_deck()
     game.shuffle_deck()
     start_response = game.start_game()
+    game.canStart = False
     save_current_game(game)
     return jsonify(start_response)
 
@@ -128,7 +129,15 @@ class BlackJack:
             self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
             self.cardsPlayer.append(card)
             print(f"Player draws: {card}, Player Sum: {self.playerSum}")
-        return {"message": "start", "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
+        return {
+            "message": "start",
+            "dealerSum": None,
+            "playerSum": self.playerSum,
+            "hiddenCard": None,
+            "canHit": self.canHit,
+            "cardsDealer": self.cardsDealer,
+            "cardsPlayer": self.cardsPlayer
+        }
 
     def get_value(self, card):
         value = card.split('_')[1]
@@ -162,8 +171,25 @@ class BlackJack:
                 self.canHit = False
                 message = "Player busts!"
                 print("Player busts!")
+                return {
+                    "message": message,
+                    "dealerSum": self.dealerSum,
+                    "playerSum": self.playerSum,
+                    "hiddenCard": self.hiddenCard,
+                    "canHit": self.canHit,
+                    "cardsDealer": self.cardsDealer,
+                    "cardsPlayer": self.cardsPlayer
+                }
 
-        return {"message": message, "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
+        return {
+            "message": message,
+            "dealerSum": None,
+            "playerSum": self.playerSum,
+            "hiddenCard": None,
+            "canHit": self.canHit,
+            "cardsDealer": self.cardsDealer,
+            "cardsPlayer": self.cardsPlayer
+        }
 
     def stay(self):
         self.canHit = False
@@ -178,4 +204,12 @@ class BlackJack:
             message = "Dealer wins!"
         else:
             message = "Tie!"
-        return {"message": message, "dealerSum": self.dealerSum, "playerSum": self.playerSum, "hiddenCard": self.hiddenCard,"canHit": self.canHit, "cardsDealer": self.cardsDealer, "cardsPlayer": self.cardsPlayer}
+        return {
+            "message": message,
+            "dealerSum": self.dealerSum,
+            "playerSum": self.playerSum,
+            "hiddenCard": self.hiddenCard,
+            "canHit": self.canHit,
+            "cardsDealer": self.cardsDealer,
+            "cardsPlayer": self.cardsPlayer
+        }
