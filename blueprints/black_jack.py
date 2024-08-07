@@ -3,7 +3,9 @@ import random
 
 from flask import Blueprint, request, render_template, jsonify, session
 
-from helper_functions.user_administration import userid_from_token, userdata_from_id
+from helper_functions.user_administration import userid_from_token, userdata_from_id, update_balance
+from helper_functions.stats import played_game
+
 
 black_jack_blueprint = Blueprint('black_jack', __name__)
 

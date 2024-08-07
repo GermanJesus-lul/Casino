@@ -23,6 +23,16 @@
             <div id="cardsPlayer">
             </div>
             <br>
+            <div>
+                <label for="betAmount">Bet:</label>
+                <div class="bet-container">
+                    <button type="button" class="input-number-button" id="decrementBetBy10">-10</button>
+                    <button type="button" class="input-number-button" id="decrementBetBy1">-1</button>
+                    <input id="betAmount" type="number" value="10" min="1" />
+                    <button type="button" class="input-number-button" id="incrementBetBy1">+1</button>
+                    <button type="button" class="input-number-button" id="incrementBetBy10">+10</button>
+                </div>
+            </div>
             <button id="start">Start</button>
             <button id="hit">Hit</button>
             <button id="stay">Stay</button>

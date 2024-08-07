@@ -11,8 +11,50 @@ body {
     margin: 1px;
 }
 
-#hit , #stay {
-    width: 100px;
-    height: 50px;
-    font-size: 20px;
+.bet-container {
+    display: inline-flex;
+    align-items: center;
 }
+
+.input-number-button {
+    font-size: 24px;
+    width: 60px;
+    height: 30px;
+    margin: 0;
+    background-color: #8FB8DE;
+    border-radius: 5px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+#betAmount {
+    font-size: 24px;
+    width: 80px;
+    height: 26px;
+    text-align: center;
+    margin: 1px;
+    border-radius: 4px;
+}
+#hit , #stay ,#start ,#restart{
+    width: 110px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 8px;
+}
+
+#start {
+    background-color: #8FB8DE;
+}
+
+#hit, #stay, #restart, #start, .input-number-button:hover {
+    cursor: pointer;
+}
+

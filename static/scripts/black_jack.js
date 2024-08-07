@@ -1,7 +1,21 @@
 document.getElementById("hit").addEventListener("click", hit);
 document.getElementById("stay").addEventListener("click", stay);
 document.getElementById("start").addEventListener("click", start);
-document.getElementById("restart").addEventListener("click", restart)
+document.getElementById("restart").addEventListener("click", restart);
+document.getElementById("decrementBetBy10").addEventListener("click", () => changeBetAmount(-10));
+document.getElementById("decrementBetBy1").addEventListener("click", () => changeBetAmount(-1));
+document.getElementById("incrementBetBy1").addEventListener("click", () => changeBetAmount(1));
+document.getElementById("incrementBetBy10").addEventListener("click", () => changeBetAmount(10));
+
+function changeBetAmount(amount) {
+    const betAmountElement = document.getElementById("betAmount");
+    const currentValue = parseInt(betAmountElement.value, 10);
+    const newValue = currentValue + amount;
+    if (newValue >= betAmountElement.min) {
+        betAmountElement.value = newValue;
+    }
+}
+
 async function hit() {
     // Send a GET request to the /hit route
     const response = await fetch('/black_jack/hit', { method: "GET" });
@@ -24,6 +38,7 @@ async function restart() {
 
 }
 
+
 async function start() {
     // Send a GET request to the /start route
     const response = await fetch('/black_jack/start', { method: "GET" });
@@ -35,6 +50,7 @@ async function start() {
 
 function updateGameState(gameState) {
     // Update dealer and player sums
+    console.log("gameState", gameState)
     document.getElementById("sumDealer").textContent = gameState.dealerSum;
     document.getElementById("sumPlayer").textContent = gameState.playerSum;
     // Update the cards displayed for the dealer, clear existing cards first (except the hidden card)
