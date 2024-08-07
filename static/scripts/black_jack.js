@@ -35,7 +35,9 @@ async function stay() {
 }
 
 async function restart() {
-
+    const response = await fetch('/black_jack/restart', { method: "GET" });
+    const gameState = await response.json();
+    updateGameState(gameState);
 }
 
 
@@ -58,7 +60,7 @@ function updateGameState(gameState) {
     while (dealerCardsContainer.children.length > 0) { // Keep the hidden card
         dealerCardsContainer.removeChild(dealerCardsContainer.lastChild);
     }
-    if (gameState.hiddenCard !== null){
+    if (gameState.state === 'gameOver'){
         const hiddenCardImg = document.createElement("img");
         hiddenCardImg.src = `/static/images/card_deck_black_jack/${gameState.hiddenCard}.svg`;
         hiddenCardImg.alt = gameState.hiddenCard;
@@ -92,4 +94,56 @@ function updateGameState(gameState) {
 
     // Clear any previous result
     document.getElementById("result").textContent = gameState.message;
+    updateButtonStates(gameState);
+}
+
+function updateButtonStates(gameState) {
+    const buttons = {
+        hit: document.getElementById("hit"),
+        stay: document.getElementById("stay"),
+        start: document.getElementById("start"),
+        restart: document.getElementById("restart"),
+        decrementBetBy10: document.getElementById("decrementBetBy10"),
+        decrementBetBy1: document.getElementById("decrementBetBy1"),
+        incrementBetBy1: document.getElementById("incrementBetBy1"),
+        incrementBetBy10: document.getElementById("incrementBetBy10")
+    };
+    for (const key in buttons) {
+        buttons[key].disabled = true;
+        buttons[key].style.backgroundColor = "grey";
+        buttons[key].style.cursor = "default";
+    }
+        if (gameState.state === 'initial' || gameState.state === 'betting') {
+        buttons.start.disabled = false;
+        buttons.start.style.backgroundColor = '#8FB8DE';
+        buttons.start.style.cursor = 'pointer';
+
+        buttons.decrementBetBy10.disabled = false;
+        buttons.decrementBetBy10.style.backgroundColor = '#8FB8DE';
+        buttons.decrementBetBy10.style.cursor = 'pointer';
+
+        buttons.decrementBetBy1.disabled = false;
+        buttons.decrementBetBy1.style.backgroundColor = '#8FB8DE';
+        buttons.decrementBetBy1.style.cursor = 'pointer';
+
+        buttons.incrementBetBy1.disabled = false;
+        buttons.incrementBetBy1.style.backgroundColor = '#8FB8DE';
+        buttons.incrementBetBy1.style.cursor = 'pointer';
+
+        buttons.incrementBetBy10.disabled = false;
+        buttons.incrementBetBy10.style.backgroundColor = '#8FB8DE';
+        buttons.incrementBetBy10.style.cursor = 'pointer';
+    } else if (gameState.state === 'playing') {
+        buttons.hit.disabled = false;
+        buttons.hit.style.backgroundColor = '#8FB8DE';
+        buttons.hit.style.cursor = 'pointer';
+
+        buttons.stay.disabled = false;
+        buttons.stay.style.backgroundColor = '#8FB8DE';
+        buttons.stay.style.cursor = 'pointer';
+    } else if (gameState.state === 'gameOver') {
+        buttons.restart.disabled = false;
+        buttons.restart.style.backgroundColor = '#8FB8DE';
+        buttons.restart.style.cursor = 'pointer';
+    }
 }

@@ -47,7 +47,20 @@ def hit():
 def stay():
     game = get_current_game()
     stay_result = game.stay()
+    save_current_game(game)
     return jsonify(stay_result)
+
+@black_jack_blueprint.route('/restart', methods=["GET"])
+def restart():
+    game = get_current_game()
+    restart_result = game.restart()
+    save_current_game(game)
+    return jsonify(restart_result)
+
+@black_jack_blueprint.route('/get_game_state', methods=["GET"])
+def get_game():
+    game = get_current_game()
+    return jsonify(game.get_game_state())
 
 
 def get_current_game():
@@ -76,6 +89,7 @@ class BlackJack:
         self.cardsDealer = []
         self.cardsPlayer = []
         self.canStart = True
+        self.state = 'initial'  # Possible states: 'initial', 'betting', 'playing', 'gameOver'
 
     def to_dict(self):
         return {
@@ -88,7 +102,8 @@ class BlackJack:
             "canHit": self.canHit,
             "cardsDealer": self.cardsDealer,
             "cardsPlayer": self.cardsPlayer,
-            "canStart": self.canStart
+            "canStart": self.canStart,
+            "state": self.state
         }
 
     def from_dict(self, data):
@@ -102,6 +117,7 @@ class BlackJack:
         self.cardsDealer = data['cardsDealer']
         self.cardsPlayer = data['cardsPlayer']
         self.canStart = data['canStart']
+        self.state = data['state']
 
     def build_deck(self):
         values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king']
@@ -112,6 +128,7 @@ class BlackJack:
         random.shuffle(self.deck)
 
     def start_game(self):
+        self.state = 'playing'
         print("start game")
         self.hiddenCard = self.deck.pop()
         self.dealerSum += self.get_value(self.hiddenCard)
@@ -131,15 +148,7 @@ class BlackJack:
             self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
             self.cardsPlayer.append(card)
             print(f"Player draws: {card}, Player Sum: {self.playerSum}")
-        return {
-            "message": "start",
-            "dealerSum": None,
-            "playerSum": self.playerSum,
-            "hiddenCard": None,
-            "canHit": self.canHit,
-            "cardsDealer": self.cardsDealer,
-            "cardsPlayer": self.cardsPlayer
-        }
+        return self.get_game_state()
 
     def get_value(self, card):
         value = card.split('_')[1]
@@ -160,6 +169,8 @@ class BlackJack:
         return sum, ace_count
 
     def hit(self):
+        if self.state != 'playing':
+            return self.get_game_state()
         message = "hit"
         if self.canHit:
             print("Player hits...")
@@ -171,30 +182,16 @@ class BlackJack:
             print(f"Player draws: {card}, Player Sum: {self.playerSum}")
             if self.playerSum > 21:
                 self.canHit = False
+                self.state = 'gameOver'
                 message = "Player busts!"
                 print("Player busts!")
-                return {
-                    "message": message,
-                    "dealerSum": self.dealerSum,
-                    "playerSum": self.playerSum,
-                    "hiddenCard": self.hiddenCard,
-                    "canHit": self.canHit,
-                    "cardsDealer": self.cardsDealer,
-                    "cardsPlayer": self.cardsPlayer
-                }
-
-        return {
-            "message": message,
-            "dealerSum": None,
-            "playerSum": self.playerSum,
-            "hiddenCard": None,
-            "canHit": self.canHit,
-            "cardsDealer": self.cardsDealer,
-            "cardsPlayer": self.cardsPlayer
-        }
+        return self.get_game_state()
 
     def stay(self):
+        if self.state != 'playing':
+            return self.get_game_state()
         self.canHit = False
+        self.state = 'gameOver'
         print(f"Player stays. Final Player Sum: {self.playerSum}, Dealer Sum: {self.dealerSum}")
         if self.playerSum > 21:
             message = "Player busts!"
@@ -206,12 +203,52 @@ class BlackJack:
             message = "Dealer wins!"
         else:
             message = "Tie!"
-        return {
-            "message": message,
-            "dealerSum": self.dealerSum,
+        return self.get_game_state()
+
+    def restart(self):
+        self.dealerSum = 0
+        self.playerSum = 0
+        self.dealerAceCount = 0
+        self.playerAceCount = 0
+        self.hiddenCard = ""
+        self.deck = []
+        self.canHit = True
+        self.cardsDealer = []
+        self.cardsPlayer = []
+        self.canStart = True
+        self.state = 'initial'
+        self.build_deck()
+        self.shuffle_deck()
+        return self.get_game_state()
+
+    def get_game_state(self):
+        game_state = {
+            "state": self.state,
             "playerSum": self.playerSum,
-            "hiddenCard": self.hiddenCard,
             "canHit": self.canHit,
             "cardsDealer": self.cardsDealer,
-            "cardsPlayer": self.cardsPlayer
+            "cardsPlayer": self.cardsPlayer,
+            "message": self.get_message()
         }
+        if self.state == 'gameOver':
+            game_state['dealerSum'] = self.dealerSum
+            game_state['hiddenCard'] = self.hiddenCard
+        else:
+            game_state['dealerSum'] = '?'
+            game_state['hiddenCard'] = 'back'
+
+        return game_state
+
+    def get_message(self):
+        if self.state == 'gameOver':
+            if self.playerSum > 21:
+                return "Player busts!"
+            elif self.dealerSum > 21:
+                return "Dealer busts!"
+            elif self.playerSum > self.dealerSum:
+                return "Player wins!"
+            elif self.playerSum < self.dealerSum:
+                return "Dealer wins!"
+            else:
+                return "Tie!"
+        return ""

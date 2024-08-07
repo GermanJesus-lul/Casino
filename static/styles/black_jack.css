@@ -54,7 +54,20 @@ input[type=number] {
     background-color: #8FB8DE;
 }
 
-#hit, #stay, #restart, #start, .input-number-button:hover {
+#start, .input-number-button:hover {
     cursor: pointer;
 }
 
+button:disabled {
+    background-color: grey;
+    cursor: default;
+}
+
+#restart , #hit , #stay {
+    background-color: grey;
+}
+
+#result {
+    font-size: 24px;
+    margin: 10px;
+}
