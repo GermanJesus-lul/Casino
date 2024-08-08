@@ -200,7 +200,7 @@ class BlackJack:
                 user_id = userid_from_token(request.cookies.get('token'))
                 bet_amount = get_bet_amount()
                 update_balance(user_id, -bet_amount)
-                #played_game(user_id, -bet_amount, "black_jack", text_field=message)
+                played_game(user_id, -bet_amount, "blackjack", text_field=message)
                 print("Player busts!")
         return self.get_game_state()
 
@@ -215,22 +215,22 @@ class BlackJack:
         if self.playerSum > 21:
             message = "Player busts!"
             update_balance(user_id, -bet_amount)
-            #played_game(user_id, -bet_amount, "black_jack", text_field=message)
+            played_game(user_id, -bet_amount, "blackjack", text_field=message)
         elif self.dealerSum > 21:
             message = "Dealer busts!"
             update_balance(user_id, bet_amount)
-            #played_game(user_id, bet_amount, "black_jack", text_field=message)
+            played_game(user_id, bet_amount, "blackjack", text_field=message)
         elif self.playerSum > self.dealerSum:
             message = "Player wins!"
             update_balance(user_id, bet_amount)
-            #played_game(user_id, bet_amount, "black_jack", text_field=message)
+            played_game(user_id, bet_amount, "blackjack", text_field=message)
         elif self.playerSum < self.dealerSum:
             message = "Dealer wins!"
             update_balance(user_id, -bet_amount)
-            #played_game(user_id, -bet_amount, "black_jack", text_field=message)
+            played_game(user_id, -bet_amount, "blackjack", text_field=message)
         else:
             message = "Tie!"
-            #played_game(user_id, 0, "black_jack", text_field=message)
+            played_game(user_id, 0, "blackjack", text_field=message)
         return self.get_game_state()
 
     def restart(self):
