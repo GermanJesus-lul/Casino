@@ -64,7 +64,7 @@ def create_minesweeper():
 
 
 @minesweeper_blueprint.route('/try', methods=["POST"])
-def get_field_value():
+def try_minesweeper():
     content = request.json
 
     pos = content["pos"]
@@ -89,6 +89,7 @@ def cash_out_minesweeper():
     update_balance(user_id, user_cash_out_val)
 
     ret_str = "Cashed out {:.2f}".format(user_cash_out_val)
+    played_game(user_id, user_cash_out_val - user_bet, "minesweeper", text_field=ret_str)
 
     user_cash_out_val = 0
     user_bet = 0
