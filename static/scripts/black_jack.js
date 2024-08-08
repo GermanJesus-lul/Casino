@@ -42,12 +42,23 @@ async function restart() {
 
 
 async function start() {
+    const betAmountElement = document.getElementById("betAmount");
+    const betAmount = parseInt(betAmountElement.value, 10);
     // Send a GET request to the /start route
-    const response = await fetch('/black_jack/start', { method: "GET" });
+    const response = await fetch('/black_jack/start', {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({"bet":  betAmount })
+    });
     // Parse the JSON response
     const gameState = await response.json();
-    // Update the HTML elements with the new game state
-    updateGameState(gameState);
+    if (response.status === 400) {
+        document.getElementById("result").textContent = gameState.message;
+    }
+    else {
+        // Update the HTML elements with the new game state
+        updateGameState(gameState);
+    }
 }
 
 function updateGameState(gameState) {

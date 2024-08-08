@@ -10,15 +10,23 @@ from helper_functions.stats import played_game
 black_jack_blueprint = Blueprint('black_jack', __name__)
 
 
-@black_jack_blueprint.route('/start', methods=["GET"])
+@black_jack_blueprint.route('/start', methods=["POST"])
 def start():
-    game = BlackJack()
-    game.build_deck()
-    game.shuffle_deck()
-    start_response = game.start_game()
-    game.canStart = False
-    save_current_game(game)
-    return jsonify(start_response)
+    content = request.json
+    user_id = userid_from_token(request.cookies.get('token'))
+    user_data = userdata_from_id(user_id)
+    bet_amount = int(content['bet'])
+
+    if (user_data['balance'] >=  bet_amount):
+        game = BlackJack()
+        game.build_deck()
+        game.shuffle_deck()
+        start_response = game.start_game()
+        game.canStart = False
+        save_current_game(game)
+        return jsonify(start_response)
+    else:
+        return jsonify({"message": "You can't bet more money than you have!"}), 400
 
 
 @black_jack_blueprint.route('/')
