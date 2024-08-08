@@ -86,6 +86,7 @@ function addButtonGrid() {
     for (let i = 0; i < 25; i++) {
     const button = document.createElement('button');
     button.textContent = '?';
+    button.classList.add('grid-button')
     button.addEventListener('click', () => buttonClicked(i, button));
 
     const gridItem = document.createElement('div');

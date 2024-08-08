@@ -36,7 +36,7 @@ def create_minesweeper():
     user_id = userid_from_token(request.cookies.get('token'))
     user_data = userdata_from_id(user_id)
 
-    if 25 > count > 0 and bet < int(user_data['balance']):
+    if 25 > count > 0 and bet <= int(user_data['balance']):
 
         update_balance(user_id, bet * -1)  # subtracts bet value from user balance
 
