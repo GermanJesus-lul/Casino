@@ -5,8 +5,9 @@ const cashOutButton = document.getElementById('cashOutButton');
 const betValue = document.getElementById('betValue');
 const mineCount = document.getElementById('mineCount');
 
-betButton.addEventListener('click', placeBet)
-cashOutButton.addEventListener('click', cashOut)
+betButton.addEventListener('click', placeBet);
+cashOutButton.addEventListener('click', cashOut);
+
 
 
 async function placeBet() {
@@ -29,6 +30,7 @@ async function placeBet() {
     })
     .then(async function (response) {
         updateUserdata();
+        addButtonGrid();
     })
 }
 
@@ -37,40 +39,62 @@ async function cashOut() {
         method: 'POST'})
     .then(async function (response) {
         let result = await response.text();
-        alert(result);
+        if (result === "Cashed out 0.00") {
+            alert("You Lost");
+        }
+        else alert(result);
     })
     .then(async function (response) {
         updateUserdata();
         document.getElementById('cashOutValue').innerText = '0';
+        removeButtons();
     })
 }
 
-async function buttonClicked(number) {
+async function buttonClicked(number, buttonRef) {
     console.log(`clicked ${number}`);
-    /*
-    fetch('minesweeper/try', {
+    fetch('/minesweeper/try', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             "pos": number
         })
-    }).then(response => response.json())
-        .then(async function (response) {
-            response[0]
-        })
     })
-     */
+    .then(async function (response) {
+        let result = await response.json();
+        let multiplier = result[0];
+        let cashoutVal = result[1];
+        if (multiplier === 0) {
+            await cashOut();
+        }
+        else {
+            buttonRef.textContent = multiplier;
+        document.getElementById('cashOutValue').innerText = cashoutVal.toString();
+        alert("Multiplier: " + multiplier.toString() + " Cashout: " + cashoutVal.toString());
+        }
+    })
+    .then(async function (response) {
+        buttonRef.disabled = true;
+    })
 }
 
-// Buttons dynamisch erzeugen und Event Listener hinzufügen
-for (let i = 0; i < 25; i++) {
+function addButtonGrid() {
+    // Buttons dynamisch erzeugen und Event Listener hinzufügen
+    for (let i = 0; i < 25; i++) {
     const button = document.createElement('button');
-    button.textContent = i.toString();
-    button.addEventListener('click', () => buttonClicked(i));
+    button.textContent = '?';
+    button.addEventListener('click', () => buttonClicked(i, button));
 
     const gridItem = document.createElement('div');
     gridItem.classList.add('grid-item');
     gridItem.appendChild(button);
 
     gridContainer.appendChild(gridItem);
+    }
 }
+
+    function removeButtons() {
+        while (gridContainer.firstChild) {
+            gridContainer.removeChild(gridContainer.firstChild);
+        }
+    }

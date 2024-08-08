@@ -74,9 +74,9 @@ def get_field_value():
         user_cash_out_val = 0
         return jsonify(0, 0)
     else:
-        multiplier = (mines_count / (25 - user_guesses_count)) + 1
+        multiplier = round((mines_count / (25 - user_guesses_count)) + 1, 2)
         user_guesses_count += 1
-        user_cash_out_val *= multiplier
+        user_cash_out_val = round(multiplier * user_cash_out_val, 2)
         return jsonify(multiplier, user_cash_out_val)
 
 
