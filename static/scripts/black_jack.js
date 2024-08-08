@@ -32,6 +32,7 @@ async function stay() {
     const gameState = await response.json();
     // Update the HTML elements with the new game state
     updateGameState(gameState);
+    updateUserdata();
 }
 
 async function restart() {

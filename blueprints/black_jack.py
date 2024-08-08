@@ -17,16 +17,21 @@ def start():
     user_data = userdata_from_id(user_id)
     bet_amount = int(content['bet'])
 
-    if (user_data['balance'] >=  bet_amount):
+    if user_data['balance'] >= bet_amount:
         game = BlackJack()
         game.build_deck()
         game.shuffle_deck()
         start_response = game.start_game()
         game.canStart = False
         save_current_game(game)
+        session['bet_amount'] = bet_amount
         return jsonify(start_response)
     else:
         return jsonify({"message": "You can't bet more money than you have!"}), 400
+
+
+def get_bet_amount():
+    return session.get('bet_amount', 0)
 
 
 @black_jack_blueprint.route('/')
@@ -200,15 +205,21 @@ class BlackJack:
             return self.get_game_state()
         self.canHit = False
         self.state = 'gameOver'
+        user_id = userid_from_token(request.cookies.get('token'))
+        bet_amount = get_bet_amount()
         print(f"Player stays. Final Player Sum: {self.playerSum}, Dealer Sum: {self.dealerSum}")
         if self.playerSum > 21:
             message = "Player busts!"
+            update_balance(user_id, -bet_amount)
         elif self.dealerSum > 21:
             message = "Dealer busts!"
+            update_balance(user_id, bet_amount)
         elif self.playerSum > self.dealerSum:
             message = "Player wins!"
+            update_balance(user_id, bet_amount)
         elif self.playerSum < self.dealerSum:
             message = "Dealer wins!"
+            update_balance(user_id, -bet_amount)
         else:
             message = "Tie!"
         return self.get_game_state()
