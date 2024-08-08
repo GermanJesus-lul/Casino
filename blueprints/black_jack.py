@@ -197,6 +197,9 @@ class BlackJack:
                 self.canHit = False
                 self.state = 'gameOver'
                 message = "Player busts!"
+                user_id = userid_from_token(request.cookies.get('token'))
+                bet_amount = get_bet_amount()
+                update_balance(user_id, -bet_amount)
                 print("Player busts!")
         return self.get_game_state()
 

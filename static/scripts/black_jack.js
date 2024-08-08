@@ -23,6 +23,7 @@ async function hit() {
     const gameState = await response.json();
     // Update the HTML elements with the new game state
     updateGameState(gameState);
+    updateUserdata();
 }
 
 async function stay() {
@@ -120,6 +121,7 @@ function updateButtonStates(gameState) {
         incrementBetBy1: document.getElementById("incrementBetBy1"),
         incrementBetBy10: document.getElementById("incrementBetBy10")
     };
+    const betAmountElement = document.getElementById("betAmount");
     for (const key in buttons) {
         buttons[key].disabled = true;
         buttons[key].style.backgroundColor = "grey";
@@ -145,6 +147,9 @@ function updateButtonStates(gameState) {
         buttons.incrementBetBy10.disabled = false;
         buttons.incrementBetBy10.style.backgroundColor = '#8FB8DE';
         buttons.incrementBetBy10.style.cursor = 'pointer';
+
+        betAmountElement.disabled = false;
+
     } else if (gameState.state === 'playing') {
         buttons.hit.disabled = false;
         buttons.hit.style.backgroundColor = '#8FB8DE';
@@ -153,9 +158,14 @@ function updateButtonStates(gameState) {
         buttons.stay.disabled = false;
         buttons.stay.style.backgroundColor = '#8FB8DE';
         buttons.stay.style.cursor = 'pointer';
+
+        betAmountElement.disabled = true;
+
     } else if (gameState.state === 'gameOver') {
         buttons.restart.disabled = false;
         buttons.restart.style.backgroundColor = '#8FB8DE';
         buttons.restart.style.cursor = 'pointer';
+
+        betAmountElement.disabled = true;
     }
 }
