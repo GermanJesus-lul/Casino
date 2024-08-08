@@ -11,21 +11,28 @@ black_jack_blueprint = Blueprint('black_jack', __name__)
 
 @black_jack_blueprint.route('/start', methods=["POST"])
 def start():
-    content = request.json
-    user_id = userid_from_token(request.cookies.get('token'))
-    user_data = userdata_from_id(user_id)
-    bet_amount = int(content['bet'])
+    try:
+        content = request.json
+        user_id = userid_from_token(request.cookies.get('token'))
+        user_data = userdata_from_id(user_id)
+        bet_amount = int(content['bet'])
 
-    if user_data['balance'] >= bet_amount:
-        game = BlackJack()
-        game.build_deck()
-        game.shuffle_deck()
-        start_response = game.start_game()
-        save_current_game(game)
-        session['bet_amount'] = bet_amount
-        return jsonify(start_response)
-    else:
-        return jsonify({"message": "You can't bet more money than you have!"}), 400
+        if bet_amount < 1:
+            return jsonify({"message": "Bet amount must be greater than 0."}), 400
+
+        if user_data['balance'] >= bet_amount:
+            game = BlackJack()
+            game.build_deck()
+            game.shuffle_deck()
+            start_response = game.start_game()
+            save_current_game(game)
+            session['bet_amount'] = bet_amount
+            return jsonify(start_response)
+        else:
+            return jsonify({"message": "You can't bet more money than you have!"}), 400
+    except Exception as e:
+        print("Error during start: {e}")
+        return jsonify({"message": "An error occurred while starting the game."}), 500
 
 
 def get_bet_amount():
@@ -40,26 +47,38 @@ def black_jack_home():
 
 @black_jack_blueprint.route('/hit', methods=["GET"])
 def hit():
-    game = get_current_game()
-    hit_result = game.hit()
-    save_current_game(game)
-    return jsonify(hit_result)
+    try:
+        game = get_current_game()
+        hit_result = game.hit()
+        save_current_game(game)
+        return jsonify(hit_result)
+    except Exception as e:
+        print(f"Error during hit: {e}")
+        return jsonify({"message": "An error occurred while hitting."}), 500
 
 
 @black_jack_blueprint.route('/stay', methods=["GET"])
 def stay():
-    game = get_current_game()
-    stay_result = game.stay()
-    save_current_game(game)
-    return jsonify(stay_result)
+    try:
+        game = get_current_game()
+        stay_result = game.stay()
+        save_current_game(game)
+        return jsonify(stay_result)
+    except Exception as e:
+        print(f"Error during stay: {e}")
+        return jsonify({"message": "An error occurred while staying."}), 500
 
 
 @black_jack_blueprint.route('/restart', methods=["GET"])
 def restart():
-    game = get_current_game()
-    restart_result = game.restart()
-    save_current_game(game)
-    return jsonify(restart_result)
+    try:
+        game = get_current_game()
+        restart_result = game.restart()
+        save_current_game(game)
+        return jsonify(restart_result)
+    except Exception as e:
+        print(f"Error during restart: {e}")
+        return jsonify({"message": "An error occurred while restarting."}), 500
 
 
 @black_jack_blueprint.route('/get_game_state', methods=["GET"])

@@ -17,49 +17,77 @@ function changeBetAmount(amount) {
 }
 
 async function hit() {
-    // Send a GET request to the /hit route
-    const response = await fetch('/black_jack/hit', { method: "GET" });
-    // Parse the JSON response
-    const gameState = await response.json();
-    // Update the HTML elements with the new game state
-    updateGameState(gameState);
-    updateUserdata();
+    try {
+        const response = await fetch('/black_jack/hit', {method: "GET"});
+        if (!response.ok) {
+            throw new Error(`Network response was not ok`);
+        }
+        const gameState = await response.json();
+        updateGameState(gameState);
+        updateUserdata();
+    } catch (error) {
+        console.error('Error during hit:', error);
+        document.getElementById("result").textContent = "An error occurred while hitting.";
+    }
 }
 
 async function stay() {
-    // Send a GET request to the /stay route
-    const response = await fetch('/black_jack/stay', { method: "GET" });
-    // Parse the JSON response
-    const gameState = await response.json();
-    // Update the HTML elements with the new game state
-    updateGameState(gameState);
-    updateUserdata();
+    try {
+        const response = await fetch('/black_jack/stay', {method: "GET"});
+        if (!response.ok) {
+            throw new Error(`Network response was not ok`);
+        }
+        const gameState = await response.json();
+        updateGameState(gameState);
+        updateUserdata();
+    } catch (error) {
+        console.error('Error during stay:', error);
+        document.getElementById("result").textContent = "An error occurred while staying.";
+    }
 }
 
 async function restart() {
-    const response = await fetch('/black_jack/restart', { method: "GET" });
-    const gameState = await response.json();
-    updateGameState(gameState);
+    try {
+        const response = await fetch('/black_jack/restart', {method: "GET"});
+        if (!response.ok) {
+            throw new Error(`Network response was not ok`);
+        }
+        const gameState = await response.json();
+        updateGameState(gameState);
+    } catch (error) {
+        console.error('Error during restart:', error);
+        document.getElementById("result").textContent = "An error occurred while restarting.";
+    }
 }
 
 
 async function start() {
-    const betAmountElement = document.getElementById("betAmount");
-    const betAmount = parseInt(betAmountElement.value, 10);
-    // Send a GET request to the /start route
-    const response = await fetch('/black_jack/start', {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({"bet":  betAmount })
-    });
-    // Parse the JSON response
-    const gameState = await response.json();
-    if (response.status === 400) {
-        document.getElementById("result").textContent = gameState.message;
-    }
-    else {
-        // Update the HTML elements with the new game state
-        updateGameState(gameState);
+    try {
+        const betAmountElement = document.getElementById("betAmount");
+        const betAmount = parseInt(betAmountElement.value, 10);
+        if (isNaN(betAmount) || betAmount < 1) {
+            throw new Error("Invalid bet amount");
+        }
+        const response = await fetch('/black_jack/start', {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({"bet":  betAmount })
+        });
+        const gameState = await response.json();
+        if (response.status === 400) {
+            document.getElementById("result").textContent = gameState.message;
+        } else if  (!response.ok) {
+            throw new Error(`Network response was not ok`);
+        } else {
+            updateGameState(gameState);
+        }
+    } catch (error) {
+        console.error('Error during start:', error);
+        if (error.message === "Invalid bet amount") {
+            document.getElementById("result").textContent = "Bet amount must be greater than 0.";
+        } else {
+            document.getElementById("result").textContent = "An error occurred while starting.";
+        }
     }
 }
 
