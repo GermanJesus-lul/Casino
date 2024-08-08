@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, session, jsonify
 
 from helper_functions.user_administration import userid_from_token
 
@@ -9,6 +9,7 @@ from blueprints.coinflip import coinflip_blueprint
 from blueprints.account import account_blueprint
 from blueprints.roulette import roulette_blueprint
 from blueprints.minesweeper import minesweeper_blueprint
+from blueprints.black_jack import black_jack_blueprint
 
 import config
 
@@ -17,10 +18,12 @@ app.register_blueprint(autodeployment_blueprint)
 app.register_blueprint(home_blueprint)
 app.register_blueprint(user_administration_blueprint)
 app.register_blueprint(account_blueprint)
+app.secret_key = 'topsecret'
 
 # games
 app.register_blueprint(coinflip_blueprint, url_prefix='/coinflip')
 app.register_blueprint(roulette_blueprint, url_prefix='/roulette')
+app.register_blueprint(black_jack_blueprint, url_prefix='/black_jack')
 
 app.register_blueprint(minesweeper_blueprint, url_prefix='/minesweeper')
 
@@ -49,4 +52,4 @@ def before_request():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
