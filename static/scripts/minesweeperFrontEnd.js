@@ -7,8 +7,7 @@ const mineCount = document.getElementById('mineCount');
 
 betButton.addEventListener('click', placeBet);
 cashOutButton.addEventListener('click', cashOut);
-
-
+cashOutButton.disabled = true;
 
 async function placeBet() {
     fetch('/minesweeper/newGame', {
@@ -25,12 +24,14 @@ async function placeBet() {
             // disable bet-area and show the cash-out-area
             alert("Created Game");
             document.getElementById('cashOutValue').innerText = betValue.value;
+            updateUserdata();
+            addButtonGrid();
+            betButton.disabled = true;
+            cashOutButton.disabled = false;
         }
-        else alert(result);
-    })
-    .then(async function (response) {
-        updateUserdata();
-        addButtonGrid();
+        else {
+            alert(result);
+        }
     })
 }
 
@@ -48,6 +49,8 @@ async function cashOut() {
         updateUserdata();
         document.getElementById('cashOutValue').innerText = '0';
         removeButtons();
+        betButton.disabled = false;
+        cashOutButton.disabled = true;
     })
 }
 
@@ -93,8 +96,8 @@ function addButtonGrid() {
     }
 }
 
-    function removeButtons() {
-        while (gridContainer.firstChild) {
-            gridContainer.removeChild(gridContainer.firstChild);
-        }
+function removeButtons() {
+    while (gridContainer.firstChild) {
+        gridContainer.removeChild(gridContainer.firstChild);
     }
+}

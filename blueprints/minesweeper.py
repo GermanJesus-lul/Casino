@@ -55,7 +55,7 @@ def create_minesweeper():
                 i -= 1
         return "minesweeper created"
     else:
-        if count > 25:
+        if count >= 25:
             return "to many mines"
         if count < 1:
             return "can't have less than 1 mine"
