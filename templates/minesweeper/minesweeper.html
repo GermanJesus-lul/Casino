@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Minesweeper</title>
-    <link rel="stylesheet" href="/static/styles/minesweeper.css"/>
-</head>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Minesweeper</title>
+        <link rel="stylesheet" href="/static/styles/minesweeper.css"/>
+    </head>
     <body>
         {% include "menubar.html" %}
 
-        <div>
-            <h1>Minesweeper</h1>
+        <div class="grid-container" id="grid-container">
+            <!-- Buttons mit Nummern 1 bis 25 werden hier von JavaScript eingefügt -->
         </div>
+        <div>
+            <h1>Test</h1>
+        </div>
+        <script type="text/javascript" src="/static/scripts/minesweeperFrontEnd.js"></script>
     </body>
 </html>
