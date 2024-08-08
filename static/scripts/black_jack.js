@@ -65,7 +65,6 @@ async function start() {
 
 function updateGameState(gameState) {
     // Update dealer and player sums
-    console.log("gameState", gameState)
     document.getElementById("sumDealer").textContent = gameState.dealerSum;
     document.getElementById("sumPlayer").textContent = gameState.playerSum;
     // Update the cards displayed for the dealer, clear existing cards first (except the hidden card)
@@ -124,10 +123,10 @@ function updateButtonStates(gameState) {
     const betAmountElement = document.getElementById("betAmount");
     for (const key in buttons) {
         buttons[key].disabled = true;
-        buttons[key].style.backgroundColor = "grey";
+        buttons[key].style.backgroundColor = '#D3D3D3';
         buttons[key].style.cursor = "default";
     }
-        if (gameState.state === 'initial' || gameState.state === 'betting') {
+        if (gameState.state === 'initial') {
         buttons.start.disabled = false;
         buttons.start.style.backgroundColor = '#8FB8DE';
         buttons.start.style.cursor = 'pointer';

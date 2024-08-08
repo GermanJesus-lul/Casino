@@ -23,6 +23,7 @@ body {
     margin: 0;
     background-color: #8FB8DE;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -48,24 +49,18 @@ input[type=number] {
     height: 40px;
     font-size: 20px;
     border-radius: 8px;
+    background-color: #D3D3D3;
 }
 
 #start {
     background-color: #8FB8DE;
 }
 
-#start, .input-number-button:hover {
-    cursor: pointer;
-}
-
 button:disabled {
-    background-color: grey;
+    background-color: #D3D3D3;
     cursor: default;
 }
 
-#restart , #hit , #stay {
-    background-color: grey;
-}
 
 #result {
     font-size: 24px;

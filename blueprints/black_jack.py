@@ -6,7 +6,6 @@ from flask import Blueprint, request, render_template, jsonify, session
 from helper_functions.user_administration import userid_from_token, userdata_from_id, update_balance
 from helper_functions.stats import played_game
 
-
 black_jack_blueprint = Blueprint('black_jack', __name__)
 
 
@@ -22,7 +21,6 @@ def start():
         game.build_deck()
         game.shuffle_deck()
         start_response = game.start_game()
-        game.canStart = False
         save_current_game(game)
         session['bet_amount'] = bet_amount
         return jsonify(start_response)
@@ -40,14 +38,6 @@ def black_jack_home():
         return render_template("black_jack/black_jack.html")
 
 
-@black_jack_blueprint.route('/play', methods=["POST"])
-def play():
-    content = request.json
-
-    user_id = userid_from_token(request.cookies.get('token'))
-    user_data = userdata_from_id(user_id)
-
-
 @black_jack_blueprint.route('/hit', methods=["GET"])
 def hit():
     game = get_current_game()
@@ -63,12 +53,14 @@ def stay():
     save_current_game(game)
     return jsonify(stay_result)
 
+
 @black_jack_blueprint.route('/restart', methods=["GET"])
 def restart():
     game = get_current_game()
     restart_result = game.restart()
     save_current_game(game)
     return jsonify(restart_result)
+
 
 @black_jack_blueprint.route('/get_game_state', methods=["GET"])
 def get_game():
@@ -98,11 +90,9 @@ class BlackJack:
         self.playerAceCount = 0
         self.hiddenCard = ""
         self.deck = []
-        self.canHit = True
         self.cardsDealer = []
         self.cardsPlayer = []
-        self.canStart = True
-        self.state = 'initial'  # Possible states: 'initial', 'betting', 'playing', 'gameOver'
+        self.state = 'initial'  # Possible states: 'initial', 'playing', 'gameOver'
 
     def to_dict(self):
         return {
@@ -112,10 +102,8 @@ class BlackJack:
             "playerAceCount": self.playerAceCount,
             "hiddenCard": self.hiddenCard,
             "deck": self.deck,
-            "canHit": self.canHit,
             "cardsDealer": self.cardsDealer,
             "cardsPlayer": self.cardsPlayer,
-            "canStart": self.canStart,
             "state": self.state
         }
 
@@ -126,10 +114,8 @@ class BlackJack:
         self.playerAceCount = data['playerAceCount']
         self.hiddenCard = data['hiddenCard']
         self.deck = data['deck']
-        self.canHit = data['canHit']
         self.cardsDealer = data['cardsDealer']
         self.cardsPlayer = data['cardsPlayer']
-        self.canStart = data['canStart']
         self.state = data['state']
 
     def build_deck(self):
@@ -142,25 +128,21 @@ class BlackJack:
 
     def start_game(self):
         self.state = 'playing'
-        print("start game")
         self.hiddenCard = self.deck.pop()
         self.dealerSum += self.get_value(self.hiddenCard)
         self.dealerAceCount += self.check_ace(self.hiddenCard)
-        print(f"dealer initial hidden card: {self.hiddenCard}, dealer sum: {self.dealerSum}, dealer ace count: {self.dealerAceCount}")
         while self.dealerSum < 17:
             card = self.deck.pop()
             self.dealerSum += self.get_value(card)
             self.dealerAceCount += self.check_ace(card)
             self.dealerSum, self.dealerAceCount = self.reduce_ace(self.dealerSum, self.dealerAceCount)
             self.cardsDealer.append(card)
-            print(f"Dealer draws: {card}, Dealer Sum: {self.dealerSum}")
         for i in range(2):
             card = self.deck.pop()
             self.playerSum += self.get_value(card)
             self.playerAceCount += self.check_ace(card)
             self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
             self.cardsPlayer.append(card)
-            print(f"Player draws: {card}, Player Sum: {self.playerSum}")
         return self.get_game_state()
 
     def get_value(self, card):
@@ -184,53 +166,21 @@ class BlackJack:
     def hit(self):
         if self.state != 'playing':
             return self.get_game_state()
-        message = "hit"
-        if self.canHit:
-            print("Player hits...")
-            card = self.deck.pop()
-            self.playerSum += self.get_value(card)
-            self.playerAceCount += self.check_ace(card)
-            self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
-            self.cardsPlayer.append(card)
-            print(f"Player draws: {card}, Player Sum: {self.playerSum}")
-            if self.playerSum > 21:
-                self.canHit = False
-                self.state = 'gameOver'
-                message = "Player busts!"
-                user_id = userid_from_token(request.cookies.get('token'))
-                bet_amount = get_bet_amount()
-                update_balance(user_id, -bet_amount)
-                played_game(user_id, -bet_amount, "blackjack", text_field=message)
-                print("Player busts!")
+        card = self.deck.pop()
+        self.playerSum += self.get_value(card)
+        self.playerAceCount += self.check_ace(card)
+        self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
+        self.cardsPlayer.append(card)
+        if self.playerSum > 21:
+            self.state = 'gameOver'
+            self.record_game_outcome("Player busts!", -get_bet_amount())
         return self.get_game_state()
 
     def stay(self):
         if self.state != 'playing':
             return self.get_game_state()
-        self.canHit = False
         self.state = 'gameOver'
-        user_id = userid_from_token(request.cookies.get('token'))
-        bet_amount = get_bet_amount()
-        print(f"Player stays. Final Player Sum: {self.playerSum}, Dealer Sum: {self.dealerSum}")
-        if self.playerSum > 21:
-            message = "Player busts!"
-            update_balance(user_id, -bet_amount)
-            played_game(user_id, -bet_amount, "blackjack", text_field=message)
-        elif self.dealerSum > 21:
-            message = "Dealer busts!"
-            update_balance(user_id, bet_amount)
-            played_game(user_id, bet_amount, "blackjack", text_field=message)
-        elif self.playerSum > self.dealerSum:
-            message = "Player wins!"
-            update_balance(user_id, bet_amount)
-            played_game(user_id, bet_amount, "blackjack", text_field=message)
-        elif self.playerSum < self.dealerSum:
-            message = "Dealer wins!"
-            update_balance(user_id, -bet_amount)
-            played_game(user_id, -bet_amount, "blackjack", text_field=message)
-        else:
-            message = "Tie!"
-            played_game(user_id, 0, "blackjack", text_field=message)
+        self.resolve_game()
         return self.get_game_state()
 
     def restart(self):
@@ -240,20 +190,36 @@ class BlackJack:
         self.playerAceCount = 0
         self.hiddenCard = ""
         self.deck = []
-        self.canHit = True
         self.cardsDealer = []
         self.cardsPlayer = []
-        self.canStart = True
         self.state = 'initial'
         self.build_deck()
         self.shuffle_deck()
         return self.get_game_state()
 
+    def resolve_game(self):
+        user_id = userid_from_token(request.cookies.get('token'))
+        bet_amount = get_bet_amount()
+        if self.playerSum > 21:
+            self.record_game_outcome("Player busts!", -bet_amount)
+        elif self.dealerSum > 21:
+            self.record_game_outcome("Dealer busts!", bet_amount)
+        elif self.playerSum > self.dealerSum:
+            self.record_game_outcome("Player wins!", bet_amount)
+        elif self.playerSum < self.dealerSum:
+            self.record_game_outcome("Dealer wins!", -bet_amount)
+        else:
+            self.record_game_outcome("Tie!", 0)
+
+    def record_game_outcome(self, message, amount):
+        user_id = userid_from_token(request.cookies.get('token'))
+        update_balance(user_id, amount)
+        played_game(user_id, amount, "blackjack", text_field=message)
+
     def get_game_state(self):
         game_state = {
             "state": self.state,
             "playerSum": self.playerSum,
-            "canHit": self.canHit,
             "cardsDealer": self.cardsDealer,
             "cardsPlayer": self.cardsPlayer,
             "message": self.get_message()
