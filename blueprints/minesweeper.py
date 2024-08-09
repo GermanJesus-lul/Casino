@@ -15,10 +15,9 @@ user_guesses_count = 0
 game_running = False
 
 
-@minesweeper_blueprint.route('/')
+@minesweeper_blueprint.route('/', methods=["GET"])
 def minesweeper_home():
-    if request.method == 'GET':
-        return render_template("minesweeper/minesweeper.html")
+    return render_template("minesweeper/minesweeper.html")
 
 
 @minesweeper_blueprint.route('/newGame', methods=["POST"])
