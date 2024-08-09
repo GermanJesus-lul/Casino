@@ -23,8 +23,13 @@ async function hit() {
             throw new Error(`Network response was not ok`);
         }
         const gameState = await response.json();
-        updateGameState(gameState);
-        updateUserdata();
+        if (isGameState(gameState)) {
+            updateGameState(gameState);
+            updateUserdata();
+        } else {
+            throw new Error('Invalid game state data')
+        }
+
     } catch (error) {
         console.error('Error during hit:', error);
         document.getElementById("result").textContent = "An error occurred while hitting.";
@@ -38,8 +43,13 @@ async function stay() {
             throw new Error(`Network response was not ok`);
         }
         const gameState = await response.json();
-        updateGameState(gameState);
-        updateUserdata();
+        if (isGameState(gameState)) {
+            updateGameState(gameState);
+            updateUserdata();
+        } else {
+            throw new Error('Invalid game state data')
+        }
+
     } catch (error) {
         console.error('Error during stay:', error);
         document.getElementById("result").textContent = "An error occurred while staying.";
@@ -53,7 +63,11 @@ async function restart() {
             throw new Error(`Network response was not ok`);
         }
         const gameState = await response.json();
-        updateGameState(gameState);
+        if (isGameState(gameState)) {
+            updateGameState(gameState);
+        } else {
+            throw new Error('Invalid game state data')
+        }
     } catch (error) {
         console.error('Error during restart:', error);
         document.getElementById("result").textContent = "An error occurred while restarting.";
@@ -78,8 +92,10 @@ async function start() {
             document.getElementById("result").textContent = gameState.message;
         } else if  (!response.ok) {
             throw new Error(`Network response was not ok`);
-        } else {
+        } else if (isGameState(gameState)){
             updateGameState(gameState);
+        } else {
+            throw new Error('Invalid game state data')
         }
     } catch (error) {
         console.error('Error during start:', error);
@@ -255,4 +271,16 @@ function setInitialState() {
     buttons.incrementBetBy10.disabled = false;
     buttons.incrementBetBy10.style.backgroundColor = '#8FB8DE';
     buttons.incrementBetBy10.style.cursor = 'pointer';
+}
+
+
+function isGameState(data) {
+    return (typeof data.message === 'string') && (
+        (typeof data.state === 'string' &&
+        (typeof data.dealerSum === 'number' || data.dealerSum === '?' || data.dealerSum === null) &&
+        (typeof data.playerSum === 'number' || data.playerSum === null) &&
+        (Array.isArray(data.cardsDealer) || data.cardsDealer === null) &&
+        (Array.isArray(data.cardsPlayer) || data.cardsPlayer === null) &&
+        (typeof data.hiddenCard === 'string' || data.hiddenCard === null))
+    );
 }
