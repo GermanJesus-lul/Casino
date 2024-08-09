@@ -1,3 +1,4 @@
+/* General body styling */
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -5,17 +6,20 @@ body {
     text-align: center;
 }
 
+/* Styling for the dealer's and player's cards */
 #cardsDealer img, #cardsPlayer img {
     height: 175px;
     width: 125px;
     margin: 1px;
 }
 
+/* Container for the bet adjustment buttons and input */
 .bet-container {
     display: inline-flex;
     align-items: center;
 }
 
+/* Styling for the bet adjustment buttons */
 .input-number-button {
     font-size: 24px;
     width: 60px;
@@ -26,16 +30,19 @@ body {
     cursor: pointer;
 }
 
+/* Remove the default spin buttons in number input fields */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
+/* Remove the default spin buttons in number input fields for Firefox */
 input[type=number] {
     -moz-appearance: textfield;
 }
 
+/* Styling for the bet amount input field */
 #betAmount {
     font-size: 24px;
     width: 80px;
@@ -44,6 +51,8 @@ input[type=number] {
     margin: 1px;
     border-radius: 4px;
 }
+
+/* Styling for the game control buttons */
 #hit , #stay ,#start ,#restart{
     width: 111px;
     height: 40px;
@@ -52,16 +61,18 @@ input[type=number] {
     background-color: #D3D3D3;
 }
 
+/* Specific styling for the start button */
 #start {
     background-color: #8FB8DE;
 }
 
+/* Styling for disabled buttons */
 button:disabled {
     background-color: #D3D3D3;
     cursor: default;
 }
 
-
+/* Styling for the result message */
 #result {
     font-size: 24px;
     margin: 10px;

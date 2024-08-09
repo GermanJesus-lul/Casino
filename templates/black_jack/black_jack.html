@@ -15,6 +15,7 @@
             <h1 id="blackjack">BlackJack</h1>
             <h2>Dealer: <span id="sumDealer"></span></h2>
             <div id="cardsDealer">
+                <!-- Placeholder for the dealer's hidden card -->
                 <img id="hiddenCard" src="/static/images/card_deck_black_jack/back.svg" alt="Backside">
             </div>
             <h2>You: <span id="sumPlayer"></span></h2>
@@ -22,6 +23,7 @@
             <div id="betTool">
                 <label for="betAmount">Bet:</label>
                 <div class="bet-container">
+                    <!-- Buttons to adjust the bet amount -->
                     <button type="button" class="input-number-button" id="decrementBetBy10">-10</button>
                     <button type="button" class="input-number-button" id="decrementBetBy1">-1</button>
                     <input id="betAmount" type="number" value="10" min="1" />
@@ -29,6 +31,7 @@
                     <button type="button" class="input-number-button" id="incrementBetBy10">+10</button>
                 </div>
             </div>
+            <!-- Game control buttons -->
             <button id="start">Start</button>
             <button id="hit">Hit</button>
             <button id="stay">Stay</button>

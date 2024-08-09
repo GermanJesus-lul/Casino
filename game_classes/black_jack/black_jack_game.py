@@ -1,4 +1,4 @@
-from flask import request, session
+from flask import request
 from game_classes.black_jack.card_deck import CardDeck
 from game_classes.black_jack.dealer import Dealer
 from game_classes.black_jack.player import Player
@@ -10,12 +10,14 @@ from helper_functions.game_utils import get_bet_amount
 
 class BlackJackGame:
     def __init__(self):
+        # Initialize the game with a deck, dealer, player, and initial state
         self.deck = CardDeck()
         self.dealer = Dealer()
         self.player = Player()
         self.state = 'initial'
 
     def start_game(self):
+        # Start the game by dealing cards to the dealer and player
         self.state = 'playing'
         self.dealer.hidden_card = self.deck.draw_card()
         self.dealer.sum += self.dealer.get_value(self.dealer.hidden_card)
@@ -29,6 +31,7 @@ class BlackJackGame:
         return self.get_game_state()
 
     def hit(self):
+        # Player hits and draws a card
         if self.state != 'playing':
             return self.get_game_state()
         card = self.deck.draw_card()
@@ -39,6 +42,7 @@ class BlackJackGame:
         return self.get_game_state()
 
     def stay(self):
+        # Player stays and the game is resolved
         if self.state != 'playing':
             return self.get_game_state()
         self.state = 'gameOver'
@@ -46,10 +50,12 @@ class BlackJackGame:
         return self.get_game_state()
 
     def restart(self):
+        # Restart the game
         self.__init__()
         return self.get_game_state()
 
     def resolve_game(self):
+        # Resolve the game outcome
         user_id = userid_from_token(request.cookies.get('token'))
         bet_amount = get_bet_amount()
         if self.player.sum > 21:
@@ -64,11 +70,13 @@ class BlackJackGame:
             self.record_game_outcome("Tie!", 0)
 
     def record_game_outcome(self, message, amount):
+        # Record the game outcome and update the user's balance
         user_id = userid_from_token(request.cookies.get('token'))
         update_balance(user_id, amount)
         played_game(user_id, amount, "blackjack", text_field=message)
 
     def get_game_state(self):
+        # Get the current state of the game
         game_state = {
             "state": self.state,
             "playerSum": self.player.sum,
@@ -85,6 +93,7 @@ class BlackJackGame:
         return game_state
 
     def get_message(self):
+        # Get the message based on the game state
         if self.state == 'gameOver':
             if self.player.sum > 21:
                 return "Player busts!"
@@ -99,6 +108,7 @@ class BlackJackGame:
         return ""
 
     def to_dict(self):
+        # Convert the game state to a dictionary
         return {
             'deck': self.deck.to_dict(),
             'dealer': {
@@ -117,6 +127,7 @@ class BlackJackGame:
 
     @classmethod
     def from_dict(cls, data):
+        # Create a BlackJackGame instance from a dictionary
         game = cls()
         game.deck = CardDeck.from_dict(data['deck'])
         game.dealer.sum = data['dealer']['sum']

@@ -133,7 +133,12 @@ function updateGameState(gameState) {
     });
 
     // Clear any previous result
-    document.getElementById("result").textContent = gameState.message;
+    if (gameState.state === 'initial') {
+        document.getElementById("result").textContent = "Welcome to Black Jack! The goal is to get as close to 21 without going over. Good luck!";
+    }
+    else {
+        document.getElementById("result").textContent = gameState.message;
+    }
     updateButtonStates(gameState);
 }
 
@@ -195,4 +200,59 @@ function updateButtonStates(gameState) {
 
         betAmountElement.disabled = true;
     }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    setInitialState();
+});
+
+function setInitialState() {
+    // Set initial state for dealer and player
+    document.getElementById("sumDealer").textContent = "?";
+    document.getElementById("sumPlayer").textContent = "0";
+
+    // Clear any previous result
+    document.getElementById("result").textContent = "";
+
+    // Display Black Jack explanation
+    document.getElementById("result").textContent = "Welcome to Black Jack! The goal is to get as close to 21 without going over. Good luck!";
+
+    // Disable buttons on page load
+    const buttons = {
+        hit: document.getElementById("hit"),
+        stay: document.getElementById("stay"),
+        restart: document.getElementById("restart"),
+        start: document.getElementById("start"),
+        decrementBetBy10: document.getElementById("decrementBetBy10"),
+        decrementBetBy1: document.getElementById("decrementBetBy1"),
+        incrementBetBy1: document.getElementById("incrementBetBy1"),
+        incrementBetBy10: document.getElementById("incrementBetBy10")
+    };
+
+    for (const key in buttons) {
+        buttons[key].disabled = true;
+        buttons[key].style.backgroundColor = '#D3D3D3';
+        buttons[key].style.cursor = "default";
+    }
+
+    // Enable only the start button and bet buttons
+    buttons.start.disabled = false;
+    buttons.start.style.backgroundColor = '#8FB8DE';
+    buttons.start.style.cursor = 'pointer';
+
+    buttons.decrementBetBy10.disabled = false;
+    buttons.decrementBetBy10.style.backgroundColor = '#8FB8DE';
+    buttons.decrementBetBy10.style.cursor = 'pointer';
+
+    buttons.decrementBetBy1.disabled = false;
+    buttons.decrementBetBy1.style.backgroundColor = '#8FB8DE';
+    buttons.decrementBetBy1.style.cursor = 'pointer';
+
+    buttons.incrementBetBy1.disabled = false;
+    buttons.incrementBetBy1.style.backgroundColor = '#8FB8DE';
+    buttons.incrementBetBy1.style.cursor = 'pointer';
+
+    buttons.incrementBetBy10.disabled = false;
+    buttons.incrementBetBy10.style.backgroundColor = '#8FB8DE';
+    buttons.incrementBetBy10.style.cursor = 'pointer';
 }
