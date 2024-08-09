@@ -5,6 +5,12 @@ from flask import Blueprint, request, render_template, jsonify, session
 
 from helper_functions.user_administration import userid_from_token, userdata_from_id, update_balance
 from helper_functions.stats import played_game
+from game_classes.black_jack.black_jack_game import BlackJackGame
+from game_classes.black_jack.card import Card
+from game_classes.black_jack.card_deck import CardDeck
+from game_classes.black_jack.dealer import Dealer
+from game_classes.black_jack.player import Player
+
 
 black_jack_blueprint = Blueprint('black_jack', __name__)
 
@@ -21,9 +27,6 @@ def start():
             return jsonify({"message": "Bet amount must be greater than 0."}), 400
 
         if user_data['balance'] >= bet_amount:
-            #game = BlackJack()
-            #game.build_deck()
-            #game.shuffle_deck()
             game = BlackJackGame()
             game.deck.build_deck()
             game.deck.shuffle_deck()
@@ -36,10 +39,6 @@ def start():
     except Exception as e:
         print(f"Error during start: {e}")
         return jsonify({"message": "An error occurred while starting the game."}), 500
-
-
-def get_bet_amount():
-    return session.get('bet_amount', 0)
 
 
 @black_jack_blueprint.route('/')
@@ -58,7 +57,6 @@ def hit():
         save_current_game(game)
         return jsonify(hit_result)
     except Exception as e:
-        print(f"Error during hit: {e}")
         return jsonify({"message": "An error occurred while hitting."}), 500
 
 
@@ -72,7 +70,6 @@ def stay():
         save_current_game(game)
         return jsonify(stay_result)
     except Exception as e:
-        print(f"Error during stay: {e}")
         return jsonify({"message": "An error occurred while staying."}), 500
 
 
@@ -84,7 +81,6 @@ def restart():
         save_current_game(game)
         return jsonify(restart_result)
     except Exception as e:
-        print(f"Error during restart: {e}")
         return jsonify({"message": "An error occurred while restarting."}), 500
 
 
@@ -95,425 +91,12 @@ def get_game():
 
 
 def get_current_game():
-    #if 'game' in session:
-        #game_data = json.loads(session['game'])
-        #print(f"Retrieved game data from session: {game_data}")
-        #game = BlackJack()
-        #game = BlackJackGame()
-        #game.from_dict(game_data)
-        #return game
-        #return BlackJackGame.from_dict(game_data)
-    #else:
-        #print("No game in session.")
-        #return None
-        #game = BlackJackGame()
-        #save_current_game(game)
-        #return game
     game_data = session.get('blackjack_game')
     if game_data:
-        print(f"Retrieved game data from session: {game_data}")
         return BlackJackGame.from_dict(json.loads(game_data))
-    print("No game found in session.")
     return None
 
 
 def save_current_game(game):
-    #session['game'] = json.dumps(game.to_dict())
-    #print(f"Saved game data to session: {session['game']}")
     game_data = game.to_dict()
     session['blackjack_game'] = json.dumps(game_data)
-    print(f"Saved game data to session: {game_data}")
-
-# class BlackJack:
-#     def __init__(self):
-#         self.dealerSum = 0
-#         self.playerSum = 0
-#         self.dealerAceCount = 0
-#         self.playerAceCount = 0
-#         self.hiddenCard = ""
-#         self.deck = []
-#         self.cardsDealer = []
-#         self.cardsPlayer = []
-#         self.state = 'initial'  # Possible states: 'initial', 'playing', 'gameOver'
-#
-#     def to_dict(self):
-#         return {
-#             "dealerSum": self.dealerSum,
-#             "playerSum": self.playerSum,
-#             "dealerAceCount": self.dealerAceCount,
-#             "playerAceCount": self.playerAceCount,
-#             "hiddenCard": self.hiddenCard,
-#             "deck": self.deck,
-#             "cardsDealer": self.cardsDealer,
-#             "cardsPlayer": self.cardsPlayer,
-#             "state": self.state
-#         }
-#
-#     def from_dict(self, data):
-#         self.dealerSum = data['dealerSum']
-#         self.playerSum = data['playerSum']
-#         self.dealerAceCount = data['dealerAceCount']
-#         self.playerAceCount = data['playerAceCount']
-#         self.hiddenCard = data['hiddenCard']
-#         self.deck = data['deck']
-#         self.cardsDealer = data['cardsDealer']
-#         self.cardsPlayer = data['cardsPlayer']
-#         self.state = data['state']
-#
-#     def build_deck(self):
-#         values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king']
-#         types = ['clubs', 'diamonds', 'hearts', 'spades']
-#         self.deck = [f"{t}_{v}" for t in types for v in values]
-#
-#     def shuffle_deck(self):
-#         random.shuffle(self.deck)
-#
-#     def start_game(self):
-#         self.state = 'playing'
-#         self.hiddenCard = self.deck.pop()
-#         self.dealerSum += self.get_value(self.hiddenCard)
-#         self.dealerAceCount += self.check_ace(self.hiddenCard)
-#         while self.dealerSum < 17:
-#             card = self.deck.pop()
-#             self.dealerSum += self.get_value(card)
-#             self.dealerAceCount += self.check_ace(card)
-#             self.dealerSum, self.dealerAceCount = self.reduce_ace(self.dealerSum, self.dealerAceCount)
-#             self.cardsDealer.append(card)
-#         for i in range(2):
-#             card = self.deck.pop()
-#             self.playerSum += self.get_value(card)
-#             self.playerAceCount += self.check_ace(card)
-#             self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
-#             self.cardsPlayer.append(card)
-#         return self.get_game_state()
-#
-#     def get_value(self, card):
-#         value = card.split('_')[1]
-#         if value == 'ace':
-#             return 11
-#         elif value in ['jack', 'queen', 'king']:
-#             return 10
-#         else:
-#             return int(value)
-#
-#     def check_ace(self, card):
-#         return 1 if card.split('_')[1] == 'ace' else 0
-#
-#     def reduce_ace(self, sum, ace_count):
-#         while sum > 21 and ace_count > 0:
-#             sum -= 10
-#             ace_count -= 1
-#         return sum, ace_count
-#
-#     def hit(self):
-#         if self.state != 'playing':
-#             return self.get_game_state()
-#         card = self.deck.pop()
-#         self.playerSum += self.get_value(card)
-#         self.playerAceCount += self.check_ace(card)
-#         self.playerSum, self.playerAceCount = self.reduce_ace(self.playerSum, self.playerAceCount)
-#         self.cardsPlayer.append(card)
-#         if self.playerSum > 21:
-#             self.state = 'gameOver'
-#             self.record_game_outcome("Player busts!", -get_bet_amount())
-#         return self.get_game_state()
-#
-#     def stay(self):
-#         if self.state != 'playing':
-#             return self.get_game_state()
-#         self.state = 'gameOver'
-#         self.resolve_game()
-#         return self.get_game_state()
-#
-#     def restart(self):
-#         self.dealerSum = 0
-#         self.playerSum = 0
-#         self.dealerAceCount = 0
-#         self.playerAceCount = 0
-#         self.hiddenCard = ""
-#         self.deck = []
-#         self.cardsDealer = []
-#         self.cardsPlayer = []
-#         self.state = 'initial'
-#         self.build_deck()
-#         self.shuffle_deck()
-#         return self.get_game_state()
-#
-#     def resolve_game(self):
-#         user_id = userid_from_token(request.cookies.get('token'))
-#         bet_amount = get_bet_amount()
-#         if self.playerSum > 21:
-#             self.record_game_outcome("Player busts!", -bet_amount)
-#         elif self.dealerSum > 21:
-#             self.record_game_outcome("Dealer busts!", bet_amount)
-#         elif self.playerSum > self.dealerSum:
-#             self.record_game_outcome("Player wins!", bet_amount)
-#         elif self.playerSum < self.dealerSum:
-#             self.record_game_outcome("Dealer wins!", -bet_amount)
-#         else:
-#             self.record_game_outcome("Tie!", 0)
-#
-#     def record_game_outcome(self, message, amount):
-#         user_id = userid_from_token(request.cookies.get('token'))
-#         update_balance(user_id, amount)
-#         played_game(user_id, amount, "blackjack", text_field=message)
-#
-#     def get_game_state(self):
-#         game_state = {
-#             "state": self.state,
-#             "playerSum": self.playerSum,
-#             "cardsDealer": self.cardsDealer,
-#             "cardsPlayer": self.cardsPlayer,
-#             "message": self.get_message()
-#         }
-#         if self.state == 'gameOver':
-#             game_state['dealerSum'] = self.dealerSum
-#             game_state['hiddenCard'] = self.hiddenCard
-#         else:
-#             game_state['dealerSum'] = '?'
-#             game_state['hiddenCard'] = 'back'
-#
-#         return game_state
-#
-#     def get_message(self):
-#         if self.state == 'gameOver':
-#             if self.playerSum > 21:
-#                 return "Player busts!"
-#             elif self.dealerSum > 21:
-#                 return "Dealer busts!"
-#             elif self.playerSum > self.dealerSum:
-#                 return "Player wins!"
-#             elif self.playerSum < self.dealerSum:
-#                 return "Dealer wins!"
-#             else:
-#                 return "Tie!"
-#         return ""
-
-
-class Card:
-    def __init__(self, suit, value):
-        self.suit = suit
-        self.value = value
-
-    def __str__(self):
-        return f"{self.value} of {self.suit}"
-
-    def to_dict(self):
-        return {
-            "suit": self.suit,
-            "value": self.value
-        }
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(data['suit'], data['value'])
-
-    def get_image_filename(self):
-        return f"{self.suit}_{self.value}"
-
-class CardDeck:
-    def __init__(self):
-        self.deck = []
-        self.build_deck()
-        self.shuffle_deck()
-
-    def build_deck(self):
-        suits = ['hearts', 'diamonds', 'clubs', 'spades']
-        values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace']
-        self.deck = [Card(suit, value) for suit in suits for value in values]
-
-    def shuffle_deck(self):
-        random.shuffle(self.deck)
-
-    def draw_card(self):
-        return self.deck.pop()
-
-    def to_dict(self):
-        return {
-            "deck": [card.to_dict() for card in self.deck]
-        }
-
-    @classmethod
-    def from_dict(cls, data):
-        deck = cls()
-        deck.deck = [Card.from_dict(card) for card in data['deck']]
-        return deck
-
-
-class Player:
-    def __init__(self):
-        self.sum = 0
-        self.ace_count = 0
-        self.cards = []
-
-    def add_card(self, card):
-        self.sum += self.get_value(card)
-        self.ace_count += self.check_ace(card)
-        self.sum, self.ace_count = self.reduce_ace(self.sum, self.ace_count)
-        self.cards.append(card)
-
-    def get_value(self, card):
-        if card.value == 'ace':
-            return 11
-        elif card.value in ['jack', 'queen', 'king']:
-            return 10
-        else:
-            return int(card.value)
-
-    def check_ace(self, card):
-        return 1 if card.value == 'ace' else 0
-
-    def reduce_ace(self, sum, ace_count):
-        while sum > 21 and ace_count > 0:
-            sum -= 10
-            ace_count -= 1
-        return sum, ace_count
-
-
-class Dealer(Player):
-    def __init__(self):
-        super().__init__()
-        self.hidden_card = None
-
-    def reveal_hidden_card(self):
-        print(f"Revealing hidden card: {self.hidden_card}")
-        self.add_card(self.hidden_card)
-        self.hidden_card = None
-
-
-class BlackJackPlayer(Player):
-    def __init__(self):
-        super().__init__()
-
-
-class BlackJackGame:
-    def __init__(self):
-        self.deck = CardDeck()
-        self.dealer = Dealer()
-        self.player = BlackJackPlayer()
-        self.state = 'initial'
-        print("Initialized BlackJackGame")
-
-    def start_game(self):
-        self.state = 'playing'
-        self.dealer.hidden_card = self.deck.draw_card()
-        self.dealer.sum += self.dealer.get_value(self.dealer.hidden_card)
-        self.dealer.ace_count += self.dealer.check_ace(self.dealer.hidden_card)
-        print(f"Dealer hidden card: {self.dealer.hidden_card}")
-        print(f"Dealer sum after hidden card: {self.dealer.sum}")
-        print(f"Dealer ace count after hidden card: {self.dealer.ace_count}")
-        while self.dealer.sum < 17:
-            card = self.deck.draw_card()
-            self.dealer.add_card(card)
-            print(f"Dealer drew card: {card}")
-            print(f"Dealer sum: {self.dealer.sum}")
-            print(f"Dealer ace count: {self.dealer.ace_count}")
-        for i in range(2):
-            card = self.deck.draw_card()
-            self.player.add_card(card)
-            print (f"Player drew card: {card}")
-        return self.get_game_state()
-
-    def hit(self):
-        if self.state != 'playing':
-            return self.get_game_state()
-        card = self.deck.draw_card()
-        self.player.add_card(card)
-        print(f"Player hit and drew card: {card}")
-        if self.player.sum > 21:
-            self.state = 'gameOver'
-            self.record_game_outcome("Player busts!", -get_bet_amount())
-        return self.get_game_state()
-
-    def stay(self):
-        if self.state != 'playing':
-            return self.get_game_state()
-        self.state = 'gameOver'
-        self.resolve_game()
-        print("Player stayed. Resolving game.")
-        return self.get_game_state()
-
-    def restart(self):
-        self.__init__()
-        return self.get_game_state()
-
-    def resolve_game(self):
-        user_id = userid_from_token(request.cookies.get('token'))
-        bet_amount = get_bet_amount()
-        if self.player.sum > 21:
-            self.record_game_outcome("Player busts!", -bet_amount)
-        elif self.dealer.sum > 21:
-            self.record_game_outcome("Dealer busts!", bet_amount)
-        elif self.player.sum > self.dealer.sum:
-            self.record_game_outcome("Player wins!", bet_amount)
-        elif self.player.sum < self.dealer.sum:
-            self.record_game_outcome("Dealer wins!", -bet_amount)
-        else:
-            self.record_game_outcome("Tie!", 0)
-
-    def record_game_outcome(self, message, amount):
-        user_id = userid_from_token(request.cookies.get('token'))
-        update_balance(user_id, amount)
-        played_game(user_id, amount, "blackjack", text_field=message)
-
-    def get_game_state(self):
-        game_state = {
-            "state": self.state,
-            "playerSum": self.player.sum,
-            "cardsDealer": [card.get_image_filename() for card in self.dealer.cards],
-            "cardsPlayer": [card.get_image_filename() for card in self.player.cards],
-            "message": self.get_message()
-        }
-        if self.state == 'gameOver':
-            game_state['dealerSum'] = self.dealer.sum
-            game_state['hiddenCard'] = self.dealer.hidden_card.get_image_filename()
-        else:
-            game_state['dealerSum'] = '?'
-            game_state['hiddenCard'] = 'back'
-        return game_state
-
-    def get_message(self):
-        if self.state == 'gameOver':
-            if self.player.sum > 21:
-                return "Player busts!"
-            elif self.dealer.sum > 21:
-                return "Dealer busts!"
-            elif self.player.sum > self.dealer.sum:
-                return "Player wins!"
-            elif self.player.sum < self.dealer.sum:
-                return "Dealer wins!"
-            else:
-                return "Tie!"
-        return ""
-
-    def to_dict(self):
-        return {
-            'deck': self.deck.to_dict(),
-            'dealer': {
-                'sum': self.dealer.sum,
-                'ace_count': self.dealer.ace_count,
-                'cards': [card.to_dict() for card in self.dealer.cards],
-                'hidden_card': self.dealer.hidden_card.to_dict() if self.dealer.hidden_card else None
-            },
-            'player': {
-                'sum': self.player.sum,
-                'ace_count': self.player.ace_count,
-                'cards': [card.to_dict() for card in self.player.cards]
-            },
-            'state': self.state
-        }
-
-    @classmethod
-    def from_dict(cls, data):
-        game = cls()
-        game.deck = CardDeck.from_dict(data['deck'])
-        game.dealer.sum = data['dealer']['sum']
-        game.dealer.ace_count = data['dealer']['ace_count']
-        game.dealer.cards = [Card.from_dict(card) for card in data['dealer']['cards']]
-        game.dealer.hidden_card = Card.from_dict(data['dealer']['hidden_card']) if data['dealer'][
-            'hidden_card'] else None
-        game.player.sum = data['player']['sum']
-        game.player.ace_count = data['player']['ace_count']
-        game.player.cards = [Card.from_dict(card) for card in data['player']['cards']]
-        game.state = data['state']
-        return game
