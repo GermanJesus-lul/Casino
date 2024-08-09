@@ -8,6 +8,7 @@ from blueprints.user_administration import user_administration_blueprint
 from blueprints.coinflip import coinflip_blueprint
 from blueprints.account import account_blueprint
 from blueprints.roulette import roulette_blueprint
+from blueprints.minesweeper import minesweeper_blueprint
 from blueprints.black_jack import black_jack_blueprint
 
 import config
@@ -23,6 +24,8 @@ app.secret_key = 'topsecret'
 app.register_blueprint(coinflip_blueprint, url_prefix='/coinflip')
 app.register_blueprint(roulette_blueprint, url_prefix='/roulette')
 app.register_blueprint(black_jack_blueprint, url_prefix='/black_jack')
+
+app.register_blueprint(minesweeper_blueprint, url_prefix='/minesweeper')
 
 
 @app.before_request
