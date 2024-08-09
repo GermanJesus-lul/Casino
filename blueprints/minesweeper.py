@@ -25,7 +25,7 @@ def minesweeper_home():
 def create_minesweeper():
     global user_bet
     if user_bet != 0:
-        return "theres already a game running"
+        cash_out_minesweeper()
     content = request.json
 
     count = content["count"]
@@ -36,7 +36,7 @@ def create_minesweeper():
     user_id = userid_from_token(request.cookies.get('token'))
     user_data = userdata_from_id(user_id)
 
-    if 25 > count > 0 and bet <= int(user_data['balance']):
+    if 25 > count > 0 and 0 < bet <= int(user_data['balance']):
 
         update_balance(user_id, bet * -1)  # subtracts bet value from user balance
 
