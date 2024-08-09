@@ -47,7 +47,7 @@ def black_jack_home():
         return render_template("black_jack/black_jack.html")
 
 
-@black_jack_blueprint.route('/hit', methods=["GET"])
+@black_jack_blueprint.route('/hit', methods=["POST"])
 def hit():
     try:
         game = get_current_game()
@@ -60,7 +60,7 @@ def hit():
         return jsonify({"message": "An error occurred while hitting."}), 500
 
 
-@black_jack_blueprint.route('/stay', methods=["GET"])
+@black_jack_blueprint.route('/stay', methods=["POST"])
 def stay():
     try:
         game = get_current_game()
@@ -73,7 +73,7 @@ def stay():
         return jsonify({"message": "An error occurred while staying."}), 500
 
 
-@black_jack_blueprint.route('/restart', methods=["GET"])
+@black_jack_blueprint.route('/restart', methods=["POST"])
 def restart():
     try:
         game = get_current_game()

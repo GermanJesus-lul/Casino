@@ -18,7 +18,7 @@ function changeBetAmount(amount) {
 
 async function hit() {
     try {
-        const response = await fetch('/black_jack/hit', {method: "GET"});
+        const response = await fetch('/black_jack/hit', {method: "POST"});
         if (!response.ok) {
             throw new Error(`Network response was not ok`);
         }
@@ -33,7 +33,7 @@ async function hit() {
 
 async function stay() {
     try {
-        const response = await fetch('/black_jack/stay', {method: "GET"});
+        const response = await fetch('/black_jack/stay', {method: "POST"});
         if (!response.ok) {
             throw new Error(`Network response was not ok`);
         }
@@ -48,7 +48,7 @@ async function stay() {
 
 async function restart() {
     try {
-        const response = await fetch('/black_jack/restart', {method: "GET"});
+        const response = await fetch('/black_jack/restart', {method: "POST"});
         if (!response.ok) {
             throw new Error(`Network response was not ok`);
         }
