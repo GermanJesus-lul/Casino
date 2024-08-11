@@ -14,13 +14,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Kopieren Sie den Rest der Anwendung
 COPY . .
 
-# Kopieren des Initialisierungsskripts
-COPY init_db.py .
-
 # Setzen Sie die Umgebungsvariable für Git
 ENV GIT_PYTHON_GIT_EXECUTABLE=/usr/bin/git
-# Exponieren Sie den Port, auf dem die Anwendung läuft
-EXPOSE 5000
+
+# Exposen Sie den Port, auf dem die Anwendung läuft
+EXPOSE 3000
 
 # Starten Sie die Anwendung
-CMD ["sh", "-c", "python init_db.py && python flask_app.py"]
+CMD ["bash", "entrypoint.sh"]
