@@ -1,9 +1,5 @@
 import config
-
-if config.local():
-    from helper_functions.sqliteClass import SQL
-else:
-    from helper_functions.mysqlClass import SQL
+from helper_functions.sqliteClass import SQL
 
 
 def get_history_stats(user_id):
