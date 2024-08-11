@@ -1,4 +1,4 @@
-from flask import request, redirect, render_template, make_response, Blueprint
+from flask import request, redirect, render_template, make_response, Blueprint, session, jsonify, url_for
 from helper_functions.user_administration import *
 
 user_administration_blueprint = Blueprint('user_administration', __name__)
@@ -43,3 +43,13 @@ def register():
 def userdata():
     user_id = userid_from_token(request.cookies.get('token'))
     return userdata_from_id(user_id)
+
+
+@user_administration_blueprint.route("/logout", methods=["GET", "POST"])
+def logout():
+    if request.method == "POST":
+        # Clear the session data
+        session.clear()
+        return jsonify({"message": "Logged out successfully"}), 200
+    else:
+        return redirect(url_for('user_administration.login'))

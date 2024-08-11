@@ -1,5 +1,12 @@
 // logout functionality
-function logout() {
+async function logout() {
+    try {
+        // Request the server to clear the session data
+        await fetch('/logout', { method: 'POST' });
+    } catch (error) {
+        console.error('Error during logout:', error);
+    }
+    // Clear the token and redirect to the home page
     document.cookie = "token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
     window.location.href = "/";
 }
