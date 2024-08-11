@@ -26,7 +26,7 @@ def create_minesweeper():
             "user_bet": 0,
             "minefield": [False] * 25,
             "user_cash_out_val": 0,
-            "mines_count": 0,
+            "mine_count": 0,
             "user_guesses_count": 0,
             "game_running": False
         }
@@ -37,6 +37,8 @@ def create_minesweeper():
 
     user_id = userid_from_token(request.cookies.get('token'))
     user_data = userdata_from_id(user_id)
+
+    session["minesweeper"] = json.dumps(game)
 
     if 25 > count > 0 and 0 < bet <= int(user_data['balance']):
 
@@ -80,11 +82,13 @@ def try_minesweeper():
 
     if game["minefield"][pos]:
         game["user_cash_out_val"] = 0
+        session["minesweeper"] = json.dumps(game)
         return jsonify(0, 0)
     else:
-        game["multiplier"] = round((game["mines_count"] / (25 - game["user_guesses_count"])) + 1, 2)
+        game["multiplier"] = round((game["mine_count"] / (25 - game["user_guesses_count"])) + 1, 2)
         game["user_guesses_count"] += 1
         game["user_cash_out_val"] = round(game["multiplier"] * game["user_cash_out_val"], 2)
+        session["minesweeper"] = json.dumps(game)
         return jsonify(game["multiplier"], game["user_cash_out_val"])
 
 
@@ -103,7 +107,9 @@ def cash_out_minesweeper():
     ret_str = "Cashed out {:.2f}".format(game["user_cash_out_val"])
     played_game(user_id, game["user_cash_out_val"] - game["user_bet"], "minesweeper", text_field=ret_str)
 
-    user_cash_out_val = 0
-    user_bet = 0
+    game["user_cash_out_val"] = 0
+    game["user_bet"] = 0
+
+    session["minesweeper"] = json.dumps(game)
 
     return ret_str
